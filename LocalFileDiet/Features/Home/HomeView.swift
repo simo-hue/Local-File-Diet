@@ -14,7 +14,7 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .center, spacing: 28) {
                 header
                 importPanel
                 recentSection
@@ -22,7 +22,8 @@ struct HomeView: View {
             }
             .padding()
         }
-        .navigationTitle("Local File Diet")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -64,43 +65,34 @@ struct HomeView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(spacing: 18) {
             Image("Logo")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 72, height: 72)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            Text("Make files smaller. Everything stays on your iPhone.")
-                .font(.title2.weight(.semibold))
+                .frame(width: 190, height: 190)
+                .accessibilityLabel("Local File Diet")
+
+            Text("Compress images, PDFs, and videos to the size you need.")
+                .font(.title3.weight(.semibold))
+                .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Compress images, PDFs, videos, and ZIP packages locally. Originals are never changed.")
+
+            Text("Everything stays on your iPhone. Originals are never changed.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 12)
     }
 
     private var importPanel: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            VStack(spacing: 10) {
-                Image(systemName: "arrow.down.doc")
-                    .font(.system(size: 38, weight: .semibold))
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(Color.accentColor)
-                Text(isImporting ? "Importing..." : "Choose a file to compress")
-                    .font(.headline)
-                Text("PDF, image, video, or ZIP")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 28)
-            .background(Color(.secondarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-
+        VStack(spacing: 12) {
             Button {
                 showDocumentPicker = true
             } label: {
-                Label("Import from Files", systemImage: "folder")
+                Label(isImporting ? "Importing..." : "Import from Files", systemImage: "folder")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -114,7 +106,12 @@ struct HomeView: View {
             .buttonStyle(.bordered)
             .controlSize(.large)
             .disabled(isImporting)
+
+            Text("PDF, image, video, or ZIP")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity)
     }
 
     @ViewBuilder
@@ -140,6 +137,7 @@ struct HomeView: View {
                         }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

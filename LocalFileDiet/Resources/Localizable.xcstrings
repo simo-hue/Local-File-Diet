@@ -21,6 +21,16 @@
         }
       }
     },
+    "Compress images, PDFs, and videos to the size you need." : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprimi immagini, PDF e video alla dimensione che ti serve."
+          }
+        }
+      }
+    },
     "Everything was processed locally on your iPhone." : {
       "localizations" : {
         "it" : {
@@ -31,12 +41,32 @@
         }
       }
     },
+    "Everything stays on your iPhone. Originals are never changed." : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutto resta sul tuo iPhone. Gli originali non vengono mai modificati."
+          }
+        }
+      }
+    },
     "Import from Files" : {
       "localizations" : {
         "it" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importa da File"
+          }
+        }
+      }
+    },
+    "Importing..." : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importazione..."
           }
         }
       }
@@ -87,6 +117,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scegli foto o video"
+          }
+        }
+      }
+    },
+    "PDF, image, video, or ZIP" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF, immagine, video o ZIP"
           }
         }
       }
