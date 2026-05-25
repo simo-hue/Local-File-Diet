@@ -94,6 +94,7 @@ app_target.build_configurations.each do |config|
   settings = config.build_settings
   settings["PRODUCT_BUNDLE_IDENTIFIER"] = "com.simohue.localfilediet"
   settings["PRODUCT_NAME"] = "Local File Diet"
+  settings["PRODUCT_MODULE_NAME"] = "LocalFileDiet"
   settings["INFOPLIST_FILE"] = app_info.path
   settings["CODE_SIGN_ENTITLEMENTS"] = app_entitlements.path
   settings["ASSETCATALOG_COMPILER_APPICON_NAME"] = "AppIcon"
@@ -105,6 +106,7 @@ share_target.build_configurations.each do |config|
   settings = config.build_settings
   settings["PRODUCT_BUNDLE_IDENTIFIER"] = "com.simohue.localfilediet.shareextension"
   settings["PRODUCT_NAME"] = "Local File Diet Share"
+  settings["PRODUCT_MODULE_NAME"] = "LocalFileDietShareExtension"
   settings["INFOPLIST_FILE"] = share_info.path
   settings["CODE_SIGN_ENTITLEMENTS"] = share_entitlements.path
   settings["APPLICATION_EXTENSION_API_ONLY"] = "YES"
