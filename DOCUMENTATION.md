@@ -1,0 +1,7 @@
+- [2026-05-25 16:49 CEST]: Local File Diet iOS MVP Implementation
+  - *Details*: Built a complete iPhone-only SwiftUI project from the local specification, including app scaffold, logo/app icons, privacy manifest, local-only file import, compression review flow, progress/cancellation UI, result sharing/export, settings, lightweight paywall, local history, and Share Extension handoff.
+  - *Tech Notes*: Added native Apple-framework services using UniformTypeIdentifiers, ImageIO, PDFKit, AVFoundation, PhotosUI, Photos, StoreKit 2, OSLog, and Swift concurrency. Implemented modular compression engines for images, PDFs, videos, ZIP packaging, and unsupported passthrough. Added an Xcode project generator script using the local `xcodeproj` Ruby gem, no runtime third-party app dependencies. Bundle ID: `com.simohue.localfilediet`; Share Extension bundle ID: `com.simohue.localfilediet.shareextension`; App Group placeholder: `group.com.simohue.localfilediet`; StoreKit product placeholder: `localfilediet.lifetime`.
+
+- [2026-05-25 16:49 CEST]: Verification
+  - *Details*: Built and tested the app on iOS Simulator using XcodeBuildMCP.
+  - *Tech Notes*: `build_sim` succeeded with zero warnings/errors. `test_sim` succeeded with 11 passing tests covering target parsing, byte formatting, output filename generation, file type detection, temporary-file copy safety, cancellation behavior, image compression output, PDF vector/scanned heuristic, and video bitrate estimation.
