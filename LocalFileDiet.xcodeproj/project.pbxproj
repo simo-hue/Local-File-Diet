@@ -1,0 +1,1054 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		027923713AF98003EEB08ADF /* FileReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53907C9EDD5C43504354346 /* FileReviewView.swift */; };
+		177CA22C4B3D4D9FD8256E7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9FC7880F1E1A7744707C0731 /* Assets.xcassets */; };
+		1C04689EBBC88E2A9BF758A6 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE7A0AEC335360170EC0ACE /* HistoryStore.swift */; };
+		1CAF1875830EDD1302221CE9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B1852EDEC2011110FF97C556 /* PrivacyInfo.xcprivacy */; };
+		252C4423B374F54242F704B3 /* LocalFileDietShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3127767D85523E31B71C7B9A /* LocalFileDietShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		25963C2912862C86743CF3E4 /* PDFAnalyzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F599040A52DB95C9A950444E /* PDFAnalyzerTests.swift */; };
+		2E67A5BA26D64C7D2F5C1118 /* LocalFileDietUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F30B18AC35A5DE505866795 /* LocalFileDietUITests.swift */; };
+		39CF193AEE67D00D0B56AF07 /* PhotoLibrarySaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024C0F0B96900570CEFC6D96 /* PhotoLibrarySaver.swift */; };
+		432405F0610CDBB7181B8C77 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */; };
+		48DF052417E8235E1F1501B3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01695CCF6F1BF967E32DCB3F /* HomeView.swift */; };
+		49A9FAB7F8D1797FB387F51A /* CompressionProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B82AF5B475486199F8E465 /* CompressionProgressView.swift */; };
+		4A444B6B2D2AC298F94688FE /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31529DD087A9F71B20387F6 /* AppError.swift */; };
+		58074EA0CDD49A034B6D7A3D /* CompressionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76707F3CB12A67E650657E0C /* CompressionHelpers.swift */; };
+		5B0816AADECFE45C6B47B6A2 /* PDFCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A958DC243E024FD473D47A5 /* PDFCompressionEngine.swift */; };
+		5F01EE56EA185EF64C59B454 /* CompressionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F801AC27472AB25A9BA0F5D /* CompressionModels.swift */; };
+		636323DB3F828ADFED9B6DE0 /* DocumentExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798013E02322B01AE9623B35 /* DocumentExporter.swift */; };
+		66C269ACFCE612CA319661BF /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819B117A0929A14DD10BA69E /* AppEnvironment.swift */; };
+		6C8E6B93F0F6A6F426256436 /* FilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8B71C4DB839592CF1B336E /* FilePreviewView.swift */; };
+		6F345B77BCB3DEED29EA9D01 /* CompressionCancellationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00E4D57C4BDBE616A825EC8 /* CompressionCancellationTests.swift */; };
+		72AAA603CF207E80882528C0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4DE8BD161A47ADD4B06A502C /* Localizable.xcstrings */; };
+		7BF78C1CF7780C2F34B5A0AB /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D696D55B6365DDBCBF1FA6 /* AppRootView.swift */; };
+		7C5A61273D41757D8C63C523 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0D6B5FAB0A1D4E779A491 /* AppLogger.swift */; };
+		7DB46D56734F3E62BDE29D3D /* FileTypeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEE5B2AA24E7DF89F91DCB /* FileTypeDetector.swift */; };
+		7DF0A051961F50CFA0377BD4 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806CFE9B8D61257BD0F04787 /* ShareViewController.swift */; };
+		890921571740D773873334D3 /* FileTypeDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8058DE9D8C11744311CFF427 /* FileTypeDetectorTests.swift */; };
+		895A508F9498DF72E174F7B3 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7065D43E8404F2E95BC37A /* Formatters.swift */; };
+		8BEFB2A44A51A124CC696A32 /* TemporaryFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315D30CDA7EBB044B4DDA650 /* TemporaryFileStore.swift */; };
+		8F64C2A9F21DFB1731EA9260 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8A6D3E805C216770A3C587 /* DocumentPicker.swift */; };
+		98F49B20F3FDEE0459BEE825 /* LocalFileDietApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA966193631B316A353D3D7 /* LocalFileDietApp.swift */; };
+		99C3CCC6EA1EE9A16DBF53C7 /* CompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FB173A43B6B16C78EF09FB /* CompressionEngine.swift */; };
+		9A2F7B2067212ECF20CFEA1D /* PurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D28E96CB66E4DC2C72B6289 /* PurchaseService.swift */; };
+		A40E843E2104EC9C807396BE /* PhotoPickerTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612E5492663F0D5C643E15D6 /* PhotoPickerTransfer.swift */; };
+		A863D26874D7E534F5BFAE8E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */; };
+		BCFDFCF2BD0063565554AD1A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */; };
+		CD0318D9F5BFD37F1126D4F9 /* CoreUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E071F741E850032AA7F6B2ED /* CoreUtilityTests.swift */; };
+		CDAFF638D0634A665E0A0155 /* ArchiveCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B800A8AFA0A433112C947E0 /* ArchiveCompressionEngine.swift */; };
+		D1CC38E9F5DDCA9B152CD3A4 /* ImageCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD122A679D97CA25E104230 /* ImageCompressionEngine.swift */; };
+		DC3B64C2875BC64E46EC1F8E /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4FA9BD41138C14FA22F65 /* ResultView.swift */; };
+		DC9416FFC0F5909D66B4ECDE /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795CEC5E7DE200C947C97687 /* PaywallView.swift */; };
+		DF2B8675B57A3D775A88826D /* FileImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910180C88611B4D37DD43B0D /* FileImportService.swift */; };
+		DF52B9E2CB8CFE7A45ABF816 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C420C56E538C0BDA44375D8F /* ShareSheet.swift */; };
+		DF767D75C0CAE39EDC6A59B3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B904B8E5DF81E0FA11DC0273 /* SettingsView.swift */; };
+		E48B18519ABFAB1F9314F130 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */; };
+		F2C489FE49391A2AFFD2C337 /* VideoCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB98C2FC24983D511FE1A637 /* VideoCompressionEngine.swift */; };
+		FFABC5DB028FE2A5E709866E /* TemporaryFileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E31A294B443B58E2BB93C2 /* TemporaryFileStoreTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3CE290F2D695C316996F41ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7483F3816C72D38BBDFCE224 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83DBFDE628529D121F48320F;
+			remoteInfo = LocalFileDiet;
+		};
+		4BAE817CFC4720D744EA1BC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7483F3816C72D38BBDFCE224 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83DBFDE628529D121F48320F;
+			remoteInfo = LocalFileDiet;
+		};
+		9AEC52B4CC97F5AB7D2528DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7483F3816C72D38BBDFCE224 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FD133D127D810F8B2F55190B;
+			remoteInfo = LocalFileDietShareExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2A0F42E60B85E6C57EC76A99 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				252C4423B374F54242F704B3 /* LocalFileDietShareExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00FB173A43B6B16C78EF09FB /* CompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionEngine.swift; path = LocalFileDiet/Core/Compression/CompressionEngine.swift; sourceTree = "<group>"; };
+		01695CCF6F1BF967E32DCB3F /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = LocalFileDiet/Features/Home/HomeView.swift; sourceTree = "<group>"; };
+		024C0F0B96900570CEFC6D96 /* PhotoLibrarySaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PhotoLibrarySaver.swift; path = LocalFileDiet/Core/FileExport/PhotoLibrarySaver.swift; sourceTree = "<group>"; };
+		04B82AF5B475486199F8E465 /* CompressionProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionProgressView.swift; path = LocalFileDiet/Features/CompressionProgress/CompressionProgressView.swift; sourceTree = "<group>"; };
+		065D19E72B8E0EB739A94986 /* LocalFileDiet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalFileDiet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AA966193631B316A353D3D7 /* LocalFileDietApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalFileDietApp.swift; path = LocalFileDiet/App/LocalFileDietApp.swift; sourceTree = "<group>"; };
+		0B7065D43E8404F2E95BC37A /* Formatters.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Formatters.swift; path = LocalFileDiet/Core/Models/Formatters.swift; sourceTree = "<group>"; };
+		0F30B18AC35A5DE505866795 /* LocalFileDietUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalFileDietUITests.swift; path = LocalFileDietUITests/LocalFileDietUITests.swift; sourceTree = "<group>"; };
+		24D1C5D9E36D0C513D114315 /* LocalFileDiet.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = LocalFileDiet.entitlements; path = LocalFileDiet/Support/LocalFileDiet.entitlements; sourceTree = "<group>"; };
+		24D696D55B6365DDBCBF1FA6 /* AppRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppRootView.swift; path = LocalFileDiet/App/AppRootView.swift; sourceTree = "<group>"; };
+		27A40A93E714C973E90CB2AA /* LocalFileDietUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalFileDietUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCEE5B2AA24E7DF89F91DCB /* FileTypeDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileTypeDetector.swift; path = LocalFileDiet/Core/FileImport/FileTypeDetector.swift; sourceTree = "<group>"; };
+		3127767D85523E31B71C7B9A /* LocalFileDietShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LocalFileDietShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		315D30CDA7EBB044B4DDA650 /* TemporaryFileStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TemporaryFileStore.swift; path = LocalFileDiet/Core/FileImport/TemporaryFileStore.swift; sourceTree = "<group>"; };
+		3B800A8AFA0A433112C947E0 /* ArchiveCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArchiveCompressionEngine.swift; path = LocalFileDiet/Core/Compression/ArchiveCompressionEngine.swift; sourceTree = "<group>"; };
+		43F8D1C364C6B0D1A610CE15 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = LocalFileDietShareExtension/Info.plist; sourceTree = "<group>"; };
+		4A958DC243E024FD473D47A5 /* PDFCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFCompressionEngine.swift; path = LocalFileDiet/Core/Compression/PDFCompressionEngine.swift; sourceTree = "<group>"; };
+		4D28E96CB66E4DC2C72B6289 /* PurchaseService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PurchaseService.swift; path = LocalFileDiet/Core/Purchase/PurchaseService.swift; sourceTree = "<group>"; };
+		4DE8BD161A47ADD4B06A502C /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; name = Localizable.xcstrings; path = LocalFileDiet/Resources/Localizable.xcstrings; sourceTree = "<group>"; };
+		5D8A6D3E805C216770A3C587 /* DocumentPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentPicker.swift; path = LocalFileDiet/Core/FileImport/DocumentPicker.swift; sourceTree = "<group>"; };
+		612E5492663F0D5C643E15D6 /* PhotoPickerTransfer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PhotoPickerTransfer.swift; path = LocalFileDiet/Core/FileImport/PhotoPickerTransfer.swift; sourceTree = "<group>"; };
+		6BD122A679D97CA25E104230 /* ImageCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionEngine.swift; path = LocalFileDiet/Core/Compression/ImageCompressionEngine.swift; sourceTree = "<group>"; };
+		76707F3CB12A67E650657E0C /* CompressionHelpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionHelpers.swift; path = LocalFileDiet/Core/Compression/CompressionHelpers.swift; sourceTree = "<group>"; };
+		795CEC5E7DE200C947C97687 /* PaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PaywallView.swift; path = LocalFileDiet/Features/Paywall/PaywallView.swift; sourceTree = "<group>"; };
+		798013E02322B01AE9623B35 /* DocumentExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentExporter.swift; path = LocalFileDiet/Core/FileExport/DocumentExporter.swift; sourceTree = "<group>"; };
+		7CA4FA9BD41138C14FA22F65 /* ResultView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResultView.swift; path = LocalFileDiet/Features/Result/ResultView.swift; sourceTree = "<group>"; };
+		8058DE9D8C11744311CFF427 /* FileTypeDetectorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileTypeDetectorTests.swift; path = LocalFileDietTests/FileTypeDetectorTests.swift; sourceTree = "<group>"; };
+		806CFE9B8D61257BD0F04787 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = LocalFileDietShareExtension/ShareViewController.swift; sourceTree = "<group>"; };
+		819B117A0929A14DD10BA69E /* AppEnvironment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppEnvironment.swift; path = LocalFileDiet/App/AppEnvironment.swift; sourceTree = "<group>"; };
+		910180C88611B4D37DD43B0D /* FileImportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileImportService.swift; path = LocalFileDiet/Core/FileImport/FileImportService.swift; sourceTree = "<group>"; };
+		9F801AC27472AB25A9BA0F5D /* CompressionModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionModels.swift; path = LocalFileDiet/Core/Models/CompressionModels.swift; sourceTree = "<group>"; };
+		9FC7880F1E1A7744707C0731 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = LocalFileDiet/Resources/Assets.xcassets; sourceTree = "<group>"; };
+		A00E4D57C4BDBE616A825EC8 /* CompressionCancellationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionCancellationTests.swift; path = LocalFileDietTests/CompressionCancellationTests.swift; sourceTree = "<group>"; };
+		A53907C9EDD5C43504354346 /* FileReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileReviewView.swift; path = LocalFileDiet/Features/FileReview/FileReviewView.swift; sourceTree = "<group>"; };
+		A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		AF98EDD3BFF5FFAAB5C9AD3B /* LocalFileDietTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalFileDietTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1852EDEC2011110FF97C556 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = LocalFileDiet/Resources/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B31529DD087A9F71B20387F6 /* AppError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppError.swift; path = LocalFileDiet/Core/Models/AppError.swift; sourceTree = "<group>"; };
+		B904B8E5DF81E0FA11DC0273 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = LocalFileDiet/Features/Settings/SettingsView.swift; sourceTree = "<group>"; };
+		C420C56E538C0BDA44375D8F /* ShareSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareSheet.swift; path = LocalFileDiet/Core/FileExport/ShareSheet.swift; sourceTree = "<group>"; };
+		DB0900F0B3566C962E9962FD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = LocalFileDiet/Support/Info.plist; sourceTree = "<group>"; };
+		E071F741E850032AA7F6B2ED /* CoreUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreUtilityTests.swift; path = LocalFileDietTests/CoreUtilityTests.swift; sourceTree = "<group>"; };
+		EAB0D6B5FAB0A1D4E779A491 /* AppLogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLogger.swift; path = LocalFileDiet/Core/Logging/AppLogger.swift; sourceTree = "<group>"; };
+		EB98C2FC24983D511FE1A637 /* VideoCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoCompressionEngine.swift; path = LocalFileDiet/Core/Compression/VideoCompressionEngine.swift; sourceTree = "<group>"; };
+		EBD2001FAA6322D714215E1B /* ShareExtension.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = ShareExtension.entitlements; path = LocalFileDietShareExtension/ShareExtension.entitlements; sourceTree = "<group>"; };
+		EC8B71C4DB839592CF1B336E /* FilePreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FilePreviewView.swift; path = LocalFileDiet/Core/Preview/FilePreviewView.swift; sourceTree = "<group>"; };
+		F599040A52DB95C9A950444E /* PDFAnalyzerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFAnalyzerTests.swift; path = LocalFileDietTests/PDFAnalyzerTests.swift; sourceTree = "<group>"; };
+		F8E31A294B443B58E2BB93C2 /* TemporaryFileStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TemporaryFileStoreTests.swift; path = LocalFileDietTests/TemporaryFileStoreTests.swift; sourceTree = "<group>"; };
+		FBE7A0AEC335360170EC0ACE /* HistoryStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HistoryStore.swift; path = LocalFileDiet/Core/Persistence/HistoryStore.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		25063E37B993D89A6D980DE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A863D26874D7E534F5BFAE8E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		283BCAB5A9B960BA21F94791 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48B18519ABFAB1F9314F130 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F322B730605639E8D64E942 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				432405F0610CDBB7181B8C77 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650083B775CC8A711FDF048E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCFDFCF2BD0063565554AD1A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		10F4B7371F7DE9CCB5A614CC /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				01695CCF6F1BF967E32DCB3F /* HomeView.swift */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		133300132348708648028642 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9FC7880F1E1A7744707C0731 /* Assets.xcassets */,
+				4DE8BD161A47ADD4B06A502C /* Localizable.xcstrings */,
+				B1852EDEC2011110FF97C556 /* PrivacyInfo.xcprivacy */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		18F716EC23F538D06BF54A45 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D125ED33A3439BB9377CE644 /* Compression */,
+				B74A2CCB7406BAB05C8E93A6 /* FileExport */,
+				EFF5525A4A3BB47A76177B8A /* FileImport */,
+				A5240AA02314A8DFDB8F0E42 /* Logging */,
+				E74B0062983A3B19FCC9C5CC /* Models */,
+				76C3689720DA938E742E50BB /* Persistence */,
+				D0F76714CF3D74ECA174A567 /* Preview */,
+				791C4471976062BB5E6F32E8 /* Purchase */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		20735B4BBDEB6C7EBC304683 /* FileReview */ = {
+			isa = PBXGroup;
+			children = (
+				A53907C9EDD5C43504354346 /* FileReviewView.swift */,
+			);
+			name = FileReview;
+			sourceTree = "<group>";
+		};
+		46ED373F279186901300E322 = {
+			isa = PBXGroup;
+			children = (
+				B0146885440125835685FA32 /* Products */,
+				51E60FA898CAB6A8907AD8A6 /* Frameworks */,
+				8F8CEF25886461996555F40C /* LocalFileDiet */,
+				E3B1F1A824D9CC6F5852A53E /* LocalFileDietTests */,
+				B889193129162677081D1518 /* LocalFileDietUITests */,
+				C82061D77491BBD153AD36A2 /* LocalFileDietShareExtension */,
+			);
+			sourceTree = "<group>";
+		};
+		51E60FA898CAB6A8907AD8A6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABB92779673F36F491B66673 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		76C3689720DA938E742E50BB /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				FBE7A0AEC335360170EC0ACE /* HistoryStore.swift */,
+			);
+			name = Persistence;
+			sourceTree = "<group>";
+		};
+		791C4471976062BB5E6F32E8 /* Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				4D28E96CB66E4DC2C72B6289 /* PurchaseService.swift */,
+			);
+			name = Purchase;
+			sourceTree = "<group>";
+		};
+		7E1B2F1A2C6F6DA9182E465A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				819B117A0929A14DD10BA69E /* AppEnvironment.swift */,
+				24D696D55B6365DDBCBF1FA6 /* AppRootView.swift */,
+				0AA966193631B316A353D3D7 /* LocalFileDietApp.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		884F8DB0019A7FF5FF71734C /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				D00309B1640F798E63E89447 /* CompressionProgress */,
+				20735B4BBDEB6C7EBC304683 /* FileReview */,
+				10F4B7371F7DE9CCB5A614CC /* Home */,
+				C9EBA3622D842CA6524A9547 /* Paywall */,
+				BCAF0F53571ACF10C945715E /* Result */,
+				8A1CE1D3A9B15A84F1AEEF61 /* Settings */,
+			);
+			name = Features;
+			sourceTree = "<group>";
+		};
+		8898ABBFCF9A252DD7CE42E9 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				DB0900F0B3566C962E9962FD /* Info.plist */,
+				24D1C5D9E36D0C513D114315 /* LocalFileDiet.entitlements */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		8A1CE1D3A9B15A84F1AEEF61 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B904B8E5DF81E0FA11DC0273 /* SettingsView.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		8F8CEF25886461996555F40C /* LocalFileDiet */ = {
+			isa = PBXGroup;
+			children = (
+				7E1B2F1A2C6F6DA9182E465A /* App */,
+				18F716EC23F538D06BF54A45 /* Core */,
+				884F8DB0019A7FF5FF71734C /* Features */,
+				133300132348708648028642 /* Resources */,
+				8898ABBFCF9A252DD7CE42E9 /* Support */,
+			);
+			name = LocalFileDiet;
+			sourceTree = "<group>";
+		};
+		A5240AA02314A8DFDB8F0E42 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				EAB0D6B5FAB0A1D4E779A491 /* AppLogger.swift */,
+			);
+			name = Logging;
+			sourceTree = "<group>";
+		};
+		ABB92779673F36F491B66673 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A9ADFE3CE1D5F1723EB486E6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		B0146885440125835685FA32 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				065D19E72B8E0EB739A94986 /* LocalFileDiet.app */,
+				3127767D85523E31B71C7B9A /* LocalFileDietShareExtension.appex */,
+				AF98EDD3BFF5FFAAB5C9AD3B /* LocalFileDietTests.xctest */,
+				27A40A93E714C973E90CB2AA /* LocalFileDietUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B74A2CCB7406BAB05C8E93A6 /* FileExport */ = {
+			isa = PBXGroup;
+			children = (
+				798013E02322B01AE9623B35 /* DocumentExporter.swift */,
+				024C0F0B96900570CEFC6D96 /* PhotoLibrarySaver.swift */,
+				C420C56E538C0BDA44375D8F /* ShareSheet.swift */,
+			);
+			name = FileExport;
+			sourceTree = "<group>";
+		};
+		B889193129162677081D1518 /* LocalFileDietUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0F30B18AC35A5DE505866795 /* LocalFileDietUITests.swift */,
+			);
+			name = LocalFileDietUITests;
+			sourceTree = "<group>";
+		};
+		BCAF0F53571ACF10C945715E /* Result */ = {
+			isa = PBXGroup;
+			children = (
+				7CA4FA9BD41138C14FA22F65 /* ResultView.swift */,
+			);
+			name = Result;
+			sourceTree = "<group>";
+		};
+		C82061D77491BBD153AD36A2 /* LocalFileDietShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				806CFE9B8D61257BD0F04787 /* ShareViewController.swift */,
+				43F8D1C364C6B0D1A610CE15 /* Info.plist */,
+				EBD2001FAA6322D714215E1B /* ShareExtension.entitlements */,
+			);
+			name = LocalFileDietShareExtension;
+			sourceTree = "<group>";
+		};
+		C9EBA3622D842CA6524A9547 /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				795CEC5E7DE200C947C97687 /* PaywallView.swift */,
+			);
+			name = Paywall;
+			sourceTree = "<group>";
+		};
+		D00309B1640F798E63E89447 /* CompressionProgress */ = {
+			isa = PBXGroup;
+			children = (
+				04B82AF5B475486199F8E465 /* CompressionProgressView.swift */,
+			);
+			name = CompressionProgress;
+			sourceTree = "<group>";
+		};
+		D0F76714CF3D74ECA174A567 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				EC8B71C4DB839592CF1B336E /* FilePreviewView.swift */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
+		D125ED33A3439BB9377CE644 /* Compression */ = {
+			isa = PBXGroup;
+			children = (
+				3B800A8AFA0A433112C947E0 /* ArchiveCompressionEngine.swift */,
+				00FB173A43B6B16C78EF09FB /* CompressionEngine.swift */,
+				76707F3CB12A67E650657E0C /* CompressionHelpers.swift */,
+				6BD122A679D97CA25E104230 /* ImageCompressionEngine.swift */,
+				4A958DC243E024FD473D47A5 /* PDFCompressionEngine.swift */,
+				EB98C2FC24983D511FE1A637 /* VideoCompressionEngine.swift */,
+			);
+			name = Compression;
+			sourceTree = "<group>";
+		};
+		E3B1F1A824D9CC6F5852A53E /* LocalFileDietTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00E4D57C4BDBE616A825EC8 /* CompressionCancellationTests.swift */,
+				E071F741E850032AA7F6B2ED /* CoreUtilityTests.swift */,
+				8058DE9D8C11744311CFF427 /* FileTypeDetectorTests.swift */,
+				F599040A52DB95C9A950444E /* PDFAnalyzerTests.swift */,
+				F8E31A294B443B58E2BB93C2 /* TemporaryFileStoreTests.swift */,
+			);
+			name = LocalFileDietTests;
+			sourceTree = "<group>";
+		};
+		E74B0062983A3B19FCC9C5CC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B31529DD087A9F71B20387F6 /* AppError.swift */,
+				9F801AC27472AB25A9BA0F5D /* CompressionModels.swift */,
+				0B7065D43E8404F2E95BC37A /* Formatters.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		EFF5525A4A3BB47A76177B8A /* FileImport */ = {
+			isa = PBXGroup;
+			children = (
+				5D8A6D3E805C216770A3C587 /* DocumentPicker.swift */,
+				910180C88611B4D37DD43B0D /* FileImportService.swift */,
+				2DCEE5B2AA24E7DF89F91DCB /* FileTypeDetector.swift */,
+				612E5492663F0D5C643E15D6 /* PhotoPickerTransfer.swift */,
+				315D30CDA7EBB044B4DDA650 /* TemporaryFileStore.swift */,
+			);
+			name = FileImport;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		83DBFDE628529D121F48320F /* LocalFileDiet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E312D8B184F99588C97FD111 /* Build configuration list for PBXNativeTarget "LocalFileDiet" */;
+			buildPhases = (
+				F36D306CABB3B7666054D54F /* Sources */,
+				650083B775CC8A711FDF048E /* Frameworks */,
+				DF60720388FFA7BFF8ACEE6E /* Resources */,
+				2A0F42E60B85E6C57EC76A99 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9B21E42EB634442EA2B5447F /* PBXTargetDependency */,
+			);
+			name = LocalFileDiet;
+			productName = LocalFileDiet;
+			productReference = 065D19E72B8E0EB739A94986 /* LocalFileDiet.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9B56EBBFC2A41A323752625A /* LocalFileDietUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A901AC4E55A2E85569F34A1 /* Build configuration list for PBXNativeTarget "LocalFileDietUITests" */;
+			buildPhases = (
+				C92E3AAB9F0284A16E3C2346 /* Sources */,
+				25063E37B993D89A6D980DE7 /* Frameworks */,
+				E9665C53AD610AEA7F5B2343 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5AC48ECD9A3E31B5981D3E4A /* PBXTargetDependency */,
+			);
+			name = LocalFileDietUITests;
+			productName = LocalFileDietUITests;
+			productReference = 27A40A93E714C973E90CB2AA /* LocalFileDietUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A718A629A6F7A647C2EDD3D5 /* LocalFileDietTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0ED198AD815912B150E9C947 /* Build configuration list for PBXNativeTarget "LocalFileDietTests" */;
+			buildPhases = (
+				A239A8A55C24A8B68F26DAF2 /* Sources */,
+				283BCAB5A9B960BA21F94791 /* Frameworks */,
+				93331880595D1F80F6216133 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0AB98B7F242B157A7E16FB7 /* PBXTargetDependency */,
+			);
+			name = LocalFileDietTests;
+			productName = LocalFileDietTests;
+			productReference = AF98EDD3BFF5FFAAB5C9AD3B /* LocalFileDietTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FD133D127D810F8B2F55190B /* LocalFileDietShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DD6F348E9017BB442B1481F /* Build configuration list for PBXNativeTarget "LocalFileDietShareExtension" */;
+			buildPhases = (
+				2602F1BBB8F84D1952736619 /* Sources */,
+				4F322B730605639E8D64E942 /* Frameworks */,
+				E921E6C3CE286D1307BF85AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LocalFileDietShareExtension;
+			productName = LocalFileDietShareExtension;
+			productReference = 3127767D85523E31B71C7B9A /* LocalFileDietShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7483F3816C72D38BBDFCE224 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				ORGANIZATIONNAME = "simo-hue";
+				TargetAttributes = {
+					83DBFDE628529D121F48320F = {
+						CreatedOnToolsVersion = 26.5;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					FD133D127D810F8B2F55190B = {
+						CreatedOnToolsVersion = 26.5;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 0E96DA1B0098A5D0B0BD9221 /* Build configuration list for PBXProject "LocalFileDiet" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 46ED373F279186901300E322;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B0146885440125835685FA32 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				83DBFDE628529D121F48320F /* LocalFileDiet */,
+				FD133D127D810F8B2F55190B /* LocalFileDietShareExtension */,
+				A718A629A6F7A647C2EDD3D5 /* LocalFileDietTests */,
+				9B56EBBFC2A41A323752625A /* LocalFileDietUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		93331880595D1F80F6216133 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF60720388FFA7BFF8ACEE6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				177CA22C4B3D4D9FD8256E7F /* Assets.xcassets in Resources */,
+				72AAA603CF207E80882528C0 /* Localizable.xcstrings in Resources */,
+				1CAF1875830EDD1302221CE9 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E921E6C3CE286D1307BF85AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9665C53AD610AEA7F5B2343 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2602F1BBB8F84D1952736619 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7DF0A051961F50CFA0377BD4 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A239A8A55C24A8B68F26DAF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F345B77BCB3DEED29EA9D01 /* CompressionCancellationTests.swift in Sources */,
+				CD0318D9F5BFD37F1126D4F9 /* CoreUtilityTests.swift in Sources */,
+				890921571740D773873334D3 /* FileTypeDetectorTests.swift in Sources */,
+				25963C2912862C86743CF3E4 /* PDFAnalyzerTests.swift in Sources */,
+				FFABC5DB028FE2A5E709866E /* TemporaryFileStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C92E3AAB9F0284A16E3C2346 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E67A5BA26D64C7D2F5C1118 /* LocalFileDietUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36D306CABB3B7666054D54F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66C269ACFCE612CA319661BF /* AppEnvironment.swift in Sources */,
+				7BF78C1CF7780C2F34B5A0AB /* AppRootView.swift in Sources */,
+				98F49B20F3FDEE0459BEE825 /* LocalFileDietApp.swift in Sources */,
+				CDAFF638D0634A665E0A0155 /* ArchiveCompressionEngine.swift in Sources */,
+				99C3CCC6EA1EE9A16DBF53C7 /* CompressionEngine.swift in Sources */,
+				58074EA0CDD49A034B6D7A3D /* CompressionHelpers.swift in Sources */,
+				D1CC38E9F5DDCA9B152CD3A4 /* ImageCompressionEngine.swift in Sources */,
+				5B0816AADECFE45C6B47B6A2 /* PDFCompressionEngine.swift in Sources */,
+				F2C489FE49391A2AFFD2C337 /* VideoCompressionEngine.swift in Sources */,
+				636323DB3F828ADFED9B6DE0 /* DocumentExporter.swift in Sources */,
+				39CF193AEE67D00D0B56AF07 /* PhotoLibrarySaver.swift in Sources */,
+				DF52B9E2CB8CFE7A45ABF816 /* ShareSheet.swift in Sources */,
+				8F64C2A9F21DFB1731EA9260 /* DocumentPicker.swift in Sources */,
+				DF2B8675B57A3D775A88826D /* FileImportService.swift in Sources */,
+				7DB46D56734F3E62BDE29D3D /* FileTypeDetector.swift in Sources */,
+				A40E843E2104EC9C807396BE /* PhotoPickerTransfer.swift in Sources */,
+				8BEFB2A44A51A124CC696A32 /* TemporaryFileStore.swift in Sources */,
+				7C5A61273D41757D8C63C523 /* AppLogger.swift in Sources */,
+				4A444B6B2D2AC298F94688FE /* AppError.swift in Sources */,
+				5F01EE56EA185EF64C59B454 /* CompressionModels.swift in Sources */,
+				895A508F9498DF72E174F7B3 /* Formatters.swift in Sources */,
+				1C04689EBBC88E2A9BF758A6 /* HistoryStore.swift in Sources */,
+				6C8E6B93F0F6A6F426256436 /* FilePreviewView.swift in Sources */,
+				9A2F7B2067212ECF20CFEA1D /* PurchaseService.swift in Sources */,
+				49A9FAB7F8D1797FB387F51A /* CompressionProgressView.swift in Sources */,
+				027923713AF98003EEB08ADF /* FileReviewView.swift in Sources */,
+				48DF052417E8235E1F1501B3 /* HomeView.swift in Sources */,
+				DC9416FFC0F5909D66B4ECDE /* PaywallView.swift in Sources */,
+				DC3B64C2875BC64E46EC1F8E /* ResultView.swift in Sources */,
+				DF767D75C0CAE39EDC6A59B3 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5AC48ECD9A3E31B5981D3E4A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LocalFileDiet;
+			target = 83DBFDE628529D121F48320F /* LocalFileDiet */;
+			targetProxy = 4BAE817CFC4720D744EA1BC6 /* PBXContainerItemProxy */;
+		};
+		9B21E42EB634442EA2B5447F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LocalFileDietShareExtension;
+			target = FD133D127D810F8B2F55190B /* LocalFileDietShareExtension */;
+			targetProxy = 9AEC52B4CC97F5AB7D2528DA /* PBXContainerItemProxy */;
+		};
+		C0AB98B7F242B157A7E16FB7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LocalFileDiet;
+			target = 83DBFDE628529D121F48320F /* LocalFileDiet */;
+			targetProxy = 3CE290F2D695C316996F41ED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		28D6D177BC9BABEA09ED15DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		36E8ECC512E805F14A334541 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.uitests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = LocalFileDiet;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3CF62095E044B44C4477CDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.tests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Local File Diet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Local File Diet";
+			};
+			name = Debug;
+		};
+		49EE810001F8ABB760644655 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = LocalFileDiet/Support/LocalFileDiet.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LocalFileDiet/Support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet;
+				PRODUCT_NAME = "Local File Diet";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		699BA2C6D965469389C78612 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		77A5E9817939AE653A688C4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = LocalFileDiet/Support/LocalFileDiet.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LocalFileDiet/Support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet;
+				PRODUCT_NAME = "Local File Diet";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		880CC3376AADE05D2111FDB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = LocalFileDietShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LocalFileDietShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.shareextension;
+				PRODUCT_NAME = "Local File Diet Share";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		90A02487980C3BEE1D81726E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.uitests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = LocalFileDiet;
+			};
+			name = Debug;
+		};
+		A4CC7AEF9A24EE5BCB86CD6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.tests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Local File Diet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Local File Diet";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F6645E94A363B389F370E959 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = LocalFileDietShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LocalFileDietShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.shareextension;
+				PRODUCT_NAME = "Local File Diet Share";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0DD6F348E9017BB442B1481F /* Build configuration list for PBXNativeTarget "LocalFileDietShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				880CC3376AADE05D2111FDB0 /* Release */,
+				F6645E94A363B389F370E959 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0E96DA1B0098A5D0B0BD9221 /* Build configuration list for PBXProject "LocalFileDiet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				699BA2C6D965469389C78612 /* Debug */,
+				28D6D177BC9BABEA09ED15DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0ED198AD815912B150E9C947 /* Build configuration list for PBXNativeTarget "LocalFileDietTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4CC7AEF9A24EE5BCB86CD6A /* Release */,
+				3CF62095E044B44C4477CDBA /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A901AC4E55A2E85569F34A1 /* Build configuration list for PBXNativeTarget "LocalFileDietUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36E8ECC512E805F14A334541 /* Release */,
+				90A02487980C3BEE1D81726E /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E312D8B184F99588C97FD111 /* Build configuration list for PBXNativeTarget "LocalFileDiet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77A5E9817939AE653A688C4E /* Release */,
+				49EE810001F8ABB760644655 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7483F3816C72D38BBDFCE224 /* Project object */;
+}
