@@ -1,0 +1,26 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# SwiftPM / tools
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Local signing and secrets
+*.p12
+*.mobileprovision
+*.cer
+*.key
+*.env
+*.xcconfig.local
+
+# Generated test output
+TestResults/
+*.xcresult
