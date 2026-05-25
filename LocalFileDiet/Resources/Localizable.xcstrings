@@ -2,204 +2,64 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Better Quality" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Qualità migliore"
-          }
-        }
-      }
+
     },
     "Compress" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comprimi"
-          }
-        }
-      }
+
     },
     "Compress images, PDFs, and videos to the size you need." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comprimi immagini, PDF e video alla dimensione che ti serve."
-          }
-        }
-      }
+
     },
     "Everything was processed locally on your iPhone." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tutto è stato elaborato localmente sul tuo iPhone."
-          }
-        }
-      }
+
     },
     "Everything stays on your iPhone. Originals are never changed." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tutto resta sul tuo iPhone. Gli originali non vengono mai modificati."
-          }
-        }
-      }
+
     },
     "Import from Files" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importa da File"
-          }
-        }
-      }
+
     },
     "Importing..." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importazione..."
-          }
-        }
-      }
+
     },
     "Local File Diet" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Local File Diet"
-          }
-        }
-      }
+
     },
     "Make files smaller. Everything stays on your iPhone." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riduci i file. Tutto resta sul tuo iPhone."
-          }
-        }
-      }
+
     },
     "No uploads. No account. No tracking." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nessun upload. Nessun account. Nessun tracciamento."
-          }
-        }
-      }
+
     },
     "Original file was not changed." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Il file originale non è stato modificato."
-          }
-        }
-      }
-    },
-    "Pick Photo or Video" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scegli foto o video"
-          }
-        }
-      }
+
     },
     "PDF, image, video, or ZIP" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF, immagine, video o ZIP"
-          }
-        }
-      }
+
+    },
+    "Pick Photo or Video" : {
+
     },
     "Save to Files" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Salva in File"
-          }
-        }
-      }
+
     },
     "Settings" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impostazioni"
-          }
-        }
-      }
+
     },
     "Share" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Condividi"
-          }
-        }
-      }
+
     },
     "Target reached" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Target raggiunto"
-          }
-        }
-      }
+
     },
     "Target size" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dimensione target"
-          }
-        }
-      }
+
     },
     "Try Smaller" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riduci ancora"
-          }
-        }
-      }
+
     },
     "Unlock unlimited local compression" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sblocca la compressione locale illimitata"
-          }
-        }
-      }
+
     }
   },
   "version" : "1.0"
