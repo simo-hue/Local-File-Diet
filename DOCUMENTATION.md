@@ -41,3 +41,7 @@
 - [2026-05-26 10:15 CEST]: Contained Advanced Switch Rendering
   - *Details*: Hardened the review Advanced section layout so every switch is drawn inside a fixed safe trailing column and remains fully visible on the device width.
   - *Tech Notes*: Replaced the row-level native switch rendering in the Advanced section with a scoped `ToggleStyle` and custom switch shape. The toggles keep SwiftUI toggle bindings and accessibility identifiers, while the visible control uses explicit dimensions to avoid clipping inside `DisclosureGroup`. Verified with `build_sim` and simulator screenshot inspection on the Review screen.
+
+- [2026-05-26 10:26 CEST]: Share Extension App Store Upload Fix
+  - *Details*: Fixed the Share Extension `Info.plist` structure that caused App Store Connect error 90360 by nesting `NSExtensionActivationRule` under the required `NSExtensionAttributes` dictionary.
+  - *Tech Notes*: No new dependencies were added. Verified the source plist with `plutil -lint`, verified the generated embedded `.appex` plist contains `NSExtensionAttributes`, and confirmed both Release simulator build and Release `iphoneos` build succeed.
