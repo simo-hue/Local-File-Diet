@@ -150,12 +150,17 @@ struct FileReviewView: View {
 
     private var advancedSection: some View {
         DisclosureGroup("Advanced") {
-            VStack(spacing: 14) {
-                AdvancedToggleRow("Remove metadata", isOn: $settings.stripMetadata)
-                AdvancedToggleRow("Preserve transparency when possible", isOn: $settings.preserveTransparency)
-                AdvancedToggleRow("Prefer smaller modern format", isOn: $settings.preferHEICWhenAvailable)
-                AdvancedToggleRow("Allow resolution downscale", isOn: $settings.allowResolutionDownscale)
+            VStack(alignment: .leading, spacing: 14) {
+                Toggle("Remove metadata", isOn: $settings.stripMetadata)
+                    .accessibilityIdentifier("advanced-remove-metadata-toggle")
+                Toggle("Preserve transparency when possible", isOn: $settings.preserveTransparency)
+                    .accessibilityIdentifier("advanced-preserve-transparency-toggle")
+                Toggle("Prefer smaller modern format", isOn: $settings.preferHEICWhenAvailable)
+                    .accessibilityIdentifier("advanced-prefer-modern-format-toggle")
+                Toggle("Allow resolution downscale", isOn: $settings.allowResolutionDownscale)
+                    .accessibilityIdentifier("advanced-allow-downscale-toggle")
             }
+            .toggleStyle(AdvancedSwitchToggleStyle())
             .font(.subheadline)
             .padding(.top, 8)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -292,26 +297,52 @@ struct FileReviewView: View {
     }
 }
 
-private struct AdvancedToggleRow: View {
-    let title: LocalizedStringKey
-    @Binding var isOn: Bool
+private struct AdvancedSwitchToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            withAnimation(.snappy(duration: 0.18)) {
+                configuration.isOn.toggle()
+            }
+        } label: {
+            HStack(alignment: .center, spacing: 12) {
+                configuration.label
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .layoutPriority(1)
 
-    init(_ title: LocalizedStringKey, isOn: Binding<Bool>) {
-        self.title = title
-        _isOn = isOn
+                AdvancedSwitch(isOn: configuration.isOn)
+                    .frame(width: 64, alignment: .trailing)
+            }
+            .contentShape(Rectangle())
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(configuration.isOn ? "On" : "Off")
     }
+}
+
+private struct AdvancedSwitch: View {
+    let isOn: Bool
 
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Text(title)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        ZStack(alignment: isOn ? .trailing : .leading) {
+            Capsule()
+                .fill(isOn ? Color.accentColor : Color(.tertiarySystemFill))
 
-            Toggle(title, isOn: $isOn)
-                .labelsHidden()
+            Circle()
+                .fill(Color.white)
+                .shadow(color: .black.opacity(0.18), radius: 1, x: 0, y: 1)
+                .padding(3)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(width: 54, height: 32)
+        .overlay {
+            Capsule()
+                .strokeBorder(Color.primary.opacity(isOn ? 0 : 0.12), lineWidth: 1)
+        }
+        .accessibilityHidden(true)
     }
 }
 

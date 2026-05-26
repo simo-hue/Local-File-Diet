@@ -37,3 +37,7 @@
 - [2026-05-26 09:50 CEST]: Review Advanced Toggle Layout Fix
   - *Details*: Fixed the Advanced disclosure section on the review screen so long toggle labels no longer push switches beyond the right edge after selecting an image.
   - *Tech Notes*: Constrained the review scroll content to the available width and replaced the Advanced toggles with a reusable responsive row that allows label wrapping while keeping switches inside the viewport. Updated the existing home UI test to match the current logo-first home screen and marked it `@MainActor` to remove Swift Concurrency warnings. Verified with `build_sim` and the focused `LocalFileDietUITests/LocalFileDietUITests/testHomeScreenLoads` UI test.
+
+- [2026-05-26 10:15 CEST]: Contained Advanced Switch Rendering
+  - *Details*: Hardened the review Advanced section layout so every switch is drawn inside a fixed safe trailing column and remains fully visible on the device width.
+  - *Tech Notes*: Replaced the row-level native switch rendering in the Advanced section with a scoped `ToggleStyle` and custom switch shape. The toggles keep SwiftUI toggle bindings and accessibility identifiers, while the visible control uses explicit dimensions to avoid clipping inside `DisclosureGroup`. Verified with `build_sim` and simulator screenshot inspection on the Review screen.
