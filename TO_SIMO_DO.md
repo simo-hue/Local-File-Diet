@@ -1,4 +1,0 @@
-- [2026-05-26 09:49 CEST]: GitHub Pages and App Store website URLs
-  - In GitHub repository settings, enable GitHub Pages from branch `main` and folder `/docs`.
-  - After Pages is live, use these App Store Connect URLs: Privacy Policy `https://simo-hue.github.io/Local-File-Diet/privacy.html`, Support `https://simo-hue.github.io/Local-File-Diet/support.html`, Terms `https://simo-hue.github.io/Local-File-Diet/terms.html`.
-  - Before App Review, review the public support/contact wording and add a private business/legal contact if your App Store region, seller status, or legal review requires it.

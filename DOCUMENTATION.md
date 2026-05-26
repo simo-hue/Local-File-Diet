@@ -45,3 +45,7 @@
 - [2026-05-26 10:26 CEST]: Share Extension App Store Upload Fix
   - *Details*: Fixed the Share Extension `Info.plist` structure that caused App Store Connect error 90360 by nesting `NSExtensionActivationRule` under the required `NSExtensionAttributes` dictionary.
   - *Tech Notes*: No new dependencies were added. Verified the source plist with `plutil -lint`, verified the generated embedded `.appex` plist contains `NSExtensionAttributes`, and confirmed both Release simulator build and Release `iphoneos` build succeed.
+
+- [2026-05-26 10:28 CEST]: App Store Connect Copy Sheet
+  - *Details*: Added a copy-ready Markdown file with App Store Connect metadata for Local File Diet, including app description, subtitle, promotional text, keywords, review notes, privacy answers, URLs, permissions copy, screenshot captions, and optional Italian localization text.
+  - *Tech Notes*: Created `APP_STORE_CONNECT_COPY.md`. No code, project settings, dependencies, or runtime behavior were changed.
