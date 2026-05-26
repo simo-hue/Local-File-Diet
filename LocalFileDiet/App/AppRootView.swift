@@ -18,6 +18,8 @@ struct AppRootView: View {
                 case .result(let input, let result, let settings):
                     ResultView(input: input, result: result, settings: settings) { nextInput in
                         path.append(.review(nextInput))
+                    } onStartNewImport: {
+                        path.removeAll()
                     }
                 }
             }

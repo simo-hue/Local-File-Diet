@@ -10,6 +10,7 @@ struct ResultView: View {
     let result: CompressionResult
     let settings: CompressionSettings
     let onTryAgain: (CompressionInput) -> Void
+    let onStartNewImport: () -> Void
 
     var body: some View {
         ScrollView {
@@ -126,6 +127,15 @@ struct ResultView: View {
                 }
                 .buttonStyle(.bordered)
             }
+
+            Button {
+                onStartNewImport()
+            } label: {
+                Label("Start New Import", systemImage: "house")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.large)
         }
     }
 
@@ -172,4 +182,3 @@ private struct MetricRow: View {
         }
     }
 }
-

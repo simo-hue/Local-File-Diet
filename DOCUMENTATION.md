@@ -21,3 +21,7 @@
 - [2026-05-26 09:22 CEST]: Premium Compression Progress UI
   - *Details*: Replaced the simple linear compression loader with a richer attention-grabbing progress panel: animated circular progress, shimmering progress bar, phase timeline, privacy note, and stronger phase-specific iconography.
   - *Tech Notes*: Added `ProgressPresentation` smoothing so progress never visually moves backward when compression engines retry different strategies. Updated `FileReviewView` to apply monotonic progress updates. Added a unit test for non-regressing progress. Verified with `build_sim`, `test_sim -only-testing:LocalFileDietTests` (12 passed), and `build_run_sim`.
+
+- [2026-05-26 09:24 CEST]: Result Home Return Action
+  - *Details*: Added a result-screen action that returns the user to the Home screen after a completed compression so they can start a new import immediately.
+  - *Tech Notes*: Added `onStartNewImport` to `ResultView` and wired `AppRootView` to clear the `NavigationStack` path. Verified with `build_sim`.
