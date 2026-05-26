@@ -273,7 +273,7 @@ struct FileReviewView: View {
             do {
                 let result = try await environment.compressionRouter.compress(input: input, settings: settings) { update in
                     Task { @MainActor in
-                        progress = update
+                        progress = ProgressPresentation.smoothed(current: progress, next: update)
                     }
                 }
                 await MainActor.run {

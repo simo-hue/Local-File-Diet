@@ -37,6 +37,28 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "47C67C3DCC1E8695166B3042"
+               BuildableName = "LocalFileDietTests.xctest"
+               BlueprintName = "LocalFileDietTests"
+               ReferencedContainer = "container:LocalFileDiet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AD57E5B2563573C95B9D07C9"
+               BuildableName = "LocalFileDietUITests.xctest"
+               BlueprintName = "LocalFileDietUITests"
+               ReferencedContainer = "container:LocalFileDiet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

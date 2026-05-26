@@ -17,3 +17,7 @@
 - [2026-05-25 17:25 CEST]: English-Only App Text
   - *Details*: Converted the app back to English-only text by removing Italian translations from the string catalog.
   - *Tech Notes*: `Localizable.xcstrings` now keeps English source keys without `it` localizations, so SwiftUI text resolves to English even on an Italian simulator. Verified with `rg` for Italian strings and `build_run_sim` plus simulator screenshot.
+
+- [2026-05-26 09:22 CEST]: Premium Compression Progress UI
+  - *Details*: Replaced the simple linear compression loader with a richer attention-grabbing progress panel: animated circular progress, shimmering progress bar, phase timeline, privacy note, and stronger phase-specific iconography.
+  - *Tech Notes*: Added `ProgressPresentation` smoothing so progress never visually moves backward when compression engines retry different strategies. Updated `FileReviewView` to apply monotonic progress updates. Added a unit test for non-regressing progress. Verified with `build_sim`, `test_sim -only-testing:LocalFileDietTests` (12 passed), and `build_run_sim`.
