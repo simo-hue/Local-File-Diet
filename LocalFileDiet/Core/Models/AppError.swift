@@ -10,7 +10,6 @@ enum AppError: LocalizedError, Equatable {
     case targetUnreachable(String)
     case cancelled
     case exportFailed
-    case purchaseUnavailable
 
     var errorDescription: String? {
         switch self {
@@ -32,8 +31,6 @@ enum AppError: LocalizedError, Equatable {
             "Compression was cancelled."
         case .exportFailed:
             "Could not export the compressed file."
-        case .purchaseUnavailable:
-            "The purchase is not available right now."
         }
     }
 
@@ -55,9 +52,6 @@ enum AppError: LocalizedError, Equatable {
             nil
         case .exportFailed:
             "Try sharing the file instead, or compress it again."
-        case .purchaseUnavailable:
-            "Try again later or restore purchases."
         }
     }
 }
-

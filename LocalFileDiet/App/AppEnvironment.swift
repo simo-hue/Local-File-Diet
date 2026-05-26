@@ -5,7 +5,6 @@ struct AppEnvironment: @unchecked Sendable {
     let fileImportService: FileImportService
     let compressionRouter: CompressionRouter
     let historyStore: HistoryStore
-    let purchaseService: PurchaseService
 
     static func live() -> AppEnvironment {
         let store = TemporaryFileStore()
@@ -13,8 +12,7 @@ struct AppEnvironment: @unchecked Sendable {
             temporaryFileStore: store,
             fileImportService: FileImportService(store: store),
             compressionRouter: CompressionRouter(store: store),
-            historyStore: HistoryStore(),
-            purchaseService: PurchaseService()
+            historyStore: HistoryStore()
         )
     }
 }

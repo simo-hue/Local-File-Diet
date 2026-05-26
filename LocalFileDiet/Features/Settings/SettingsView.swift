@@ -2,13 +2,11 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.appEnvironment) private var environment
-    @Environment(PurchaseService.self) private var purchaseService
     @Environment(\.dismiss) private var dismiss
     @AppStorage(AppDefaults.defaultTargetPresetKey) private var defaultTargetPreset = TargetSizePreset.forms.rawValue
     @AppStorage(AppDefaults.defaultQualityModeKey) private var defaultQualityMode = QualityMode.balanced.rawValue
     @AppStorage(AppDefaults.stripMetadataKey) private var stripMetadata = true
     @AppStorage(AppDefaults.preferHEICKey) private var preferHEIC = false
-    @State private var showPaywall = false
     @State private var clearMessage: String?
 
     var body: some View {
@@ -45,23 +43,11 @@ struct SettingsView: View {
                         Label("Clear temporary files", systemImage: "trash")
                     }
                 }
-
-                Section("Purchase") {
-                    HStack {
-                        Label(purchaseService.isUnlocked ? "Lifetime unlocked" : "Free trial", systemImage: purchaseService.isUnlocked ? "checkmark.seal" : "timer")
-                        Spacer()
-                        if !purchaseService.isUnlocked {
-                            Text("\(purchaseService.remainingFreeCompressions) left")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    Button("Unlock unlimited compression") {
-                        showPaywall = true
-                    }
-                    .disabled(purchaseService.isUnlocked)
-                    Button("Restore purchases") {
-                        Task { await purchaseService.restorePurchases() }
-                    }
+                Section("Access") {
+                    Label("Unlimited compressions included", systemImage: "infinity")
+                    Text("Local File Diet is a paid app. After download, every compression feature is available without accounts, trials, subscriptions, or in-app purchases.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Settings")
@@ -69,9 +55,6 @@ struct SettingsView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                 }
-            }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
             }
             .alert("Temporary files", isPresented: Binding(
                 get: { clearMessage != nil },

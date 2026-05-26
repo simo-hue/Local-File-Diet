@@ -3,7 +3,6 @@ import SwiftUI
 struct FileReviewView: View {
     @Environment(\.appEnvironment) private var environment
     @Environment(HistoryStore.self) private var historyStore
-    @Environment(PurchaseService.self) private var purchaseService
     @State private var settings = CompressionSettings.fromDefaults()
     @State private var selectedPreset: TargetSizePreset = .forms
     @State private var customTarget = ""
@@ -13,7 +12,6 @@ struct FileReviewView: View {
     @State private var progress: CompressionProgress?
     @State private var compressionTask: Task<Void, Never>?
     @State private var errorMessage: String?
-    @State private var showPaywall = false
 
     let input: CompressionInput
     let onResult: (CompressionResult, CompressionSettings) -> Void
@@ -47,9 +45,6 @@ struct FileReviewView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: settings) {
             await updateEstimate()
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
         }
         .alert("Compression failed", isPresented: Binding(
             get: { errorMessage != nil },
@@ -263,10 +258,6 @@ struct FileReviewView: View {
     }
 
     private func startCompression() {
-        guard purchaseService.isCompressionAllowed else {
-            showPaywall = true
-            return
-        }
         compressionTask?.cancel()
         progress = .preparing
         compressionTask = Task {
@@ -278,7 +269,6 @@ struct FileReviewView: View {
                 }
                 await MainActor.run {
                     progress = nil
-                    purchaseService.recordCompression()
                     historyStore.add(input: input, result: result)
                     UINotificationFeedbackGenerator().notificationOccurred(.success)
                     onResult(result, settings)

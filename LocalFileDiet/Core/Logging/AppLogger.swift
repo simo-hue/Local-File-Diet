@@ -4,7 +4,6 @@ import OSLog
 enum AppLogger {
     static let compression = Logger(subsystem: "com.simohue.localfilediet", category: "compression")
     static let importFlow = Logger(subsystem: "com.simohue.localfilediet", category: "import")
-    static let purchase = Logger(subsystem: "com.simohue.localfilediet", category: "purchase")
 
     static func sizeBucket(for bytes: Int64) -> String {
         switch bytes {

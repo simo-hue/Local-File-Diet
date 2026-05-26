@@ -9,12 +9,9 @@ struct LocalFileDietApp: App {
             AppRootView()
                 .environment(\.appEnvironment, environment)
                 .environment(environment.historyStore)
-                .environment(environment.purchaseService)
                 .task {
                     await environment.temporaryFileStore.cleanupOlderThan24Hours()
-                    await environment.purchaseService.loadProducts()
                 }
         }
     }
 }
-
