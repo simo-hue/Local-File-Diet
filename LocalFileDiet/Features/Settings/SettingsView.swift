@@ -36,6 +36,18 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                Section("App Store") {
+                    Link(destination: WebsiteLinks.privacyPolicy) {
+                        Label("Privacy Policy", systemImage: "hand.raised")
+                    }
+                    Link(destination: WebsiteLinks.support) {
+                        Label("Support", systemImage: "questionmark.circle")
+                    }
+                    Link(destination: WebsiteLinks.terms) {
+                        Label("Terms of Use", systemImage: "doc.text")
+                    }
+                }
+
                 Section("Storage") {
                     Button {
                         clearTemporaryFiles()
@@ -81,4 +93,10 @@ struct SettingsView: View {
             }
         }
     }
+}
+
+private enum WebsiteLinks {
+    static let privacyPolicy = URL(string: "https://simo-hue.github.io/Local-File-Diet/privacy.html")!
+    static let support = URL(string: "https://simo-hue.github.io/Local-File-Diet/support.html")!
+    static let terms = URL(string: "https://simo-hue.github.io/Local-File-Diet/terms.html")!
 }

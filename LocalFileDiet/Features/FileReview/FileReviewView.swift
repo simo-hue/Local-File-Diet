@@ -30,6 +30,7 @@ struct FileReviewView: View {
                     compressButton
                 }
                 .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .disabled(progress != nil)
 
@@ -150,14 +151,16 @@ struct FileReviewView: View {
     private var advancedSection: some View {
         DisclosureGroup("Advanced") {
             VStack(spacing: 14) {
-                Toggle("Remove metadata", isOn: $settings.stripMetadata)
-                Toggle("Preserve transparency when possible", isOn: $settings.preserveTransparency)
-                Toggle("Prefer smaller modern format", isOn: $settings.preferHEICWhenAvailable)
-                Toggle("Allow resolution downscale", isOn: $settings.allowResolutionDownscale)
+                AdvancedToggleRow("Remove metadata", isOn: $settings.stripMetadata)
+                AdvancedToggleRow("Preserve transparency when possible", isOn: $settings.preserveTransparency)
+                AdvancedToggleRow("Prefer smaller modern format", isOn: $settings.preferHEICWhenAvailable)
+                AdvancedToggleRow("Allow resolution downscale", isOn: $settings.allowResolutionDownscale)
             }
             .font(.subheadline)
             .padding(.top, 8)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder
@@ -286,6 +289,29 @@ struct FileReviewView: View {
                 }
             }
         }
+    }
+}
+
+private struct AdvancedToggleRow: View {
+    let title: LocalizedStringKey
+    @Binding var isOn: Bool
+
+    init(_ title: LocalizedStringKey, isOn: Binding<Bool>) {
+        self.title = title
+        _isOn = isOn
+    }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Text(title)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Toggle(title, isOn: $isOn)
+                .labelsHidden()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

@@ -29,3 +29,11 @@
 - [2026-05-26 09:28 CEST]: Paid Upfront Unlimited Access
   - *Details*: Converted monetization to a paid-upfront app model. After purchase/download, users have unlimited local compressions with no runtime trial, paywall, subscriptions, or in-app purchases.
   - *Tech Notes*: Removed runtime purchase gating, compression counters, paywall UI, StoreKit product loading, and restore-purchase actions. Settings now shows unlimited access included. App price must be configured in App Store Connect at EUR 2.99. Verified with `build_sim` and `test_sim -only-testing:LocalFileDietTests` (12 passed).
+
+- [2026-05-26 09:49 CEST]: GitHub Pages Website and App Store Legal Links
+  - *Details*: Added a modern static website for Local File Diet under `docs/`, including a product home page, Privacy Policy, Support page, Terms of Use, 404 page, sitemap, robots file, and optimized logo asset. The site is designed for deployment from the public GitHub repository via GitHub Pages and includes the Privacy Policy URL and Support URL needed for App Store Connect.
+  - *Tech Notes*: Added dependency-free HTML/CSS/JS assets in `docs/` with canonical GitHub Pages URLs for `https://simo-hue.github.io/Local-File-Diet/`. Updated `SettingsView` with in-app links to the Privacy Policy, Support, and Terms pages so legal/support information is accessible from the app. No new runtime dependencies were added.
+
+- [2026-05-26 09:50 CEST]: Review Advanced Toggle Layout Fix
+  - *Details*: Fixed the Advanced disclosure section on the review screen so long toggle labels no longer push switches beyond the right edge after selecting an image.
+  - *Tech Notes*: Constrained the review scroll content to the available width and replaced the Advanced toggles with a reusable responsive row that allows label wrapping while keeping switches inside the viewport. Updated the existing home UI test to match the current logo-first home screen and marked it `@MainActor` to remove Swift Concurrency warnings. Verified with `build_sim` and the focused `LocalFileDietUITests/LocalFileDietUITests/testHomeScreenLoads` UI test.

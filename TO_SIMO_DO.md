@@ -1,11 +1,4 @@
-- [2026-05-25 16:49 CEST]: GitHub publication
-  - Run a single push when ready: `git push -u origin main`.
-
-- [2026-05-25 16:49 CEST]: Apple signing and capabilities
-  - In Xcode, set the Apple Developer Team for the app and Share Extension targets.
-  - Create/enable the App Group `group.com.simohue.localfilediet` in the Apple Developer portal, then attach it to both targets.
-  - Confirm the bundle identifiers are available: `com.simohue.localfilediet` and `com.simohue.localfilediet.shareextension`.
-
-- [2026-05-26 09:28 CEST]: App Store paid app pricing
-  - In App Store Connect, configure Local File Diet as a paid app priced at EUR 2.99.
-  - Do not create an in-app purchase product for unlimited compression; the app now grants unlimited conversions after download.
+- [2026-05-26 09:49 CEST]: GitHub Pages and App Store website URLs
+  - In GitHub repository settings, enable GitHub Pages from branch `main` and folder `/docs`.
+  - After Pages is live, use these App Store Connect URLs: Privacy Policy `https://simo-hue.github.io/Local-File-Diet/privacy.html`, Support `https://simo-hue.github.io/Local-File-Diet/support.html`, Terms `https://simo-hue.github.io/Local-File-Diet/terms.html`.
+  - Before App Review, review the public support/contact wording and add a private business/legal contact if your App Store region, seller status, or legal review requires it.
