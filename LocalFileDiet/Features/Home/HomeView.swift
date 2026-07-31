@@ -9,8 +9,10 @@ struct HomeView: View {
     @State private var isImporting = false
     @State private var errorMessage: String?
     @State private var showSettings = false
+    @State private var shareTarget: RecentShareTarget?
 
     let onImported: (CompressionInput) -> Void
+    let onImportedBatch: ([CompressionInput]) -> Void
 
     var body: some View {
         ScrollView {
@@ -45,6 +47,9 @@ struct HomeView: View {
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
+        .sheet(item: $shareTarget) { target in
+            ShareSheet(activityItems: [target.url])
+        }
         .alert("Import failed", isPresented: Binding(
             get: { errorMessage != nil },
             set: { if !$0 { errorMessage = nil } }
@@ -58,9 +63,8 @@ struct HomeView: View {
             importPhoto(item)
         }
         .task {
-            if let input = try? await environment.fileImportService.importSharedFileIfAvailable() {
-                onImported(input)
-            }
+            let inputs = (try? await environment.fileImportService.importSharedFilesIfAvailable()) ?? []
+            deliver(inputs)
         }
     }
 
@@ -107,9 +111,11 @@ struct HomeView: View {
             .controlSize(.large)
             .disabled(isImporting)
 
-            Text("PDF, image, video, or ZIP")
+            Text("PDF, image, video, or ZIP. Pick several files to compress them all in one go.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
     }
@@ -128,13 +134,16 @@ struct HomeView: View {
                     .font(.subheadline)
                 }
 
+                // `.swipeActions` used to live here, which does nothing outside a
+                // `List`: swipe-to-delete on this screen had never worked. Each
+                // row now carries a visible delete control and a context menu.
                 ForEach(historyStore.items.prefix(3)) { item in
-                    RecentFileRow(item: item)
-                        .swipeActions {
-                            Button("Delete", role: .destructive) {
-                                historyStore.delete(item)
-                            }
-                        }
+                    RecentFileRow(item: item) {
+                        guard let url = item.availableOutputURL else { return }
+                        shareTarget = RecentShareTarget(id: item.id, url: url)
+                    } onDelete: {
+                        historyStore.delete(item)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -148,21 +157,45 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    // MARK: - Import
+
     private func importURLs(_ urls: [URL]) {
-        guard let url = urls.first else { return }
+        guard !urls.isEmpty else { return }
         isImporting = true
         Task {
-            defer { Task { @MainActor in isImporting = false } }
-            do {
-                let input = try await environment.fileImportService.importFile(from: url)
-                await MainActor.run {
-                    onImported(input)
-                }
-            } catch {
-                await MainActor.run {
-                    errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            var imported: [CompressionInput] = []
+            var firstError: Error?
+            for url in urls {
+                do {
+                    imported.append(try await environment.fileImportService.importFile(from: url))
+                } catch {
+                    firstError = firstError ?? error
                 }
             }
+            await MainActor.run {
+                isImporting = false
+                if imported.isEmpty {
+                    errorMessage = firstError.map(Self.message(for:)) ?? AppError.importFailed.errorDescription
+                    return
+                }
+                if imported.count < urls.count {
+                    // Filenames and paths are never logged; the count is enough
+                    // to tell a partial import from a clean one.
+                    AppLogger.importFlow.error("batch_import_partial failed=\(urls.count - imported.count, privacy: .public)")
+                }
+                deliver(imported)
+            }
+        }
+    }
+
+    /// One file behaves exactly as it always has. Several files go to the batch
+    /// screen instead of being silently thrown away.
+    private func deliver(_ inputs: [CompressionInput]) {
+        guard !inputs.isEmpty else { return }
+        if inputs.count == 1, let input = inputs.first {
+            onImported(input)
+        } else {
+            onImportedBatch(inputs)
         }
     }
 
@@ -180,50 +213,106 @@ struct HomeView: View {
                 }
             } catch {
                 await MainActor.run {
-                    errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+                    errorMessage = Self.message(for: error)
                 }
             }
         }
+    }
+
+    private static func message(for error: Error) -> String {
+        (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+    }
+}
+
+private struct RecentShareTarget: Identifiable {
+    let id: UUID
+    let url: URL
+}
+
+extension CompressionHistoryItem {
+    /// Outputs live in Caches and are pruned after 24 hours, so a history row can
+    /// easily point at a file that is no longer there. The UI has to check
+    /// before it offers to share it.
+    var availableOutputURL: URL? {
+        guard let sandboxURL, FileManager.default.fileExists(atPath: sandboxURL.path) else { return nil }
+        return sandboxURL
     }
 }
 
 private struct RecentFileRow: View {
     let item: CompressionHistoryItem
+    let onShare: () -> Void
+    let onDelete: () -> Void
+
+    private var isAvailable: Bool { item.availableOutputURL != nil }
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.title3)
-                .frame(width: 30)
-                .foregroundStyle(Color.accentColor)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.outputFilename)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-                Text("\(FileSizeFormat.string(from: item.originalSizeBytes)) → \(FileSizeFormat.string(from: item.compressedSizeBytes))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Button(action: onShare) {
+                HStack(spacing: 12) {
+                    Image(systemName: item.fileKind.symbolName)
+                        .font(.title3)
+                        .frame(width: 30)
+                        .foregroundStyle(isAvailable ? Color.accentColor : Color.secondary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(item.outputFilename)
+                            .font(.subheadline.weight(.semibold))
+                            .lineLimit(1)
+                        if isAvailable {
+                            Text("\(FileSizeFormat.string(from: item.originalSizeBytes)) → \(FileSizeFormat.string(from: item.compressedSizeBytes))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("File no longer available")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer(minLength: 0)
+                    Text(FileSizeFormat.percent(item.reductionPercent))
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(.tertiarySystemFill))
+                        .clipShape(Capsule())
+                    if isAvailable {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.footnote)
+                            .foregroundStyle(Color.accentColor)
+                    }
+                }
+                .contentShape(Rectangle())
             }
-            Spacer()
-            Text(FileSizeFormat.percent(item.reductionPercent))
-                .font(.caption.weight(.semibold))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color(.tertiarySystemFill))
-                .clipShape(Capsule())
+            .buttonStyle(.plain)
+            .disabled(!isAvailable)
+            .accessibilityLabel(isAvailable
+                                ? "Share \(item.outputFilename)"
+                                : "\(item.outputFilename), file no longer available")
+
+            Button(role: .destructive, action: onDelete) {
+                Image(systemName: "trash")
+                    .font(.footnote)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel("Delete \(item.outputFilename)")
+            .accessibilityIdentifier("recent-delete-button")
         }
         .padding(12)
+        .opacity(isAvailable ? 1 : 0.55)
         .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-    }
-
-    private var icon: String {
-        switch item.fileKind {
-        case .image: "photo"
-        case .pdf: "doc.richtext"
-        case .video: "video"
-        case .archive: "archivebox"
-        case .unsupported: "questionmark.document"
+        .contextMenu {
+            if isAvailable {
+                Button {
+                    onShare()
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+            }
+            Button(role: .destructive, action: onDelete) {
+                Label("Delete", systemImage: "trash")
+            }
         }
     }
 }

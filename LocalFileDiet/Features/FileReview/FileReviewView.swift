@@ -3,12 +3,13 @@ import SwiftUI
 struct FileReviewView: View {
     @Environment(\.appEnvironment) private var environment
     @Environment(HistoryStore.self) private var historyStore
-    @State private var settings = CompressionSettings.fromDefaults()
-    @State private var selectedPreset: TargetSizePreset = .forms
-    @State private var customTarget = ""
-    @State private var customUnit: SizeUnit = .mb
+    @State private var settings: CompressionSettings
+    @State private var targetSelection: TargetSelectionState
     @State private var estimate: CompressionEstimate?
     @State private var isEstimating = false
+    /// Guards against a slow estimate landing after a newer one. Every run takes
+    /// a token; only the run still holding the current token may publish.
+    @State private var estimateToken = 0
     @State private var progress: CompressionProgress?
     @State private var compressionTask: Task<Void, Never>?
     @State private var errorMessage: String?
@@ -16,16 +17,41 @@ struct FileReviewView: View {
     let input: CompressionInput
     let onResult: (CompressionResult, CompressionSettings) -> Void
 
+    /// Estimating now costs real work — a probe encode for images, a content
+    /// parse for PDFs — so it waits for the controls to stop moving.
+    private static let estimateDebounceNanoseconds: UInt64 = 300_000_000
+
+    init(
+        input: CompressionInput,
+        startingSettings: CompressionSettings? = nil,
+        onResult: @escaping (CompressionResult, CompressionSettings) -> Void
+    ) {
+        self.input = input
+        self.onResult = onResult
+        if let startingSettings {
+            // Arrived from "Try Smaller" / "Better Quality": the picker has to
+            // show the target that was handed to us, not the saved default.
+            _settings = State(initialValue: startingSettings)
+            _targetSelection = State(initialValue: TargetSelectionState(targetBytes: startingSettings.targetSizeBytes))
+        } else {
+            let selection = TargetSelectionState.fromDefaults()
+            var defaults = CompressionSettings.fromDefaults()
+            defaults.targetSizeBytes = selection.targetSizeBytes
+            _settings = State(initialValue: defaults)
+            _targetSelection = State(initialValue: selection)
+        }
+    }
+
     var body: some View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     FilePreviewView(url: input.workingURL, kind: input.fileKind)
                     metadataSection
-                    targetSection
-                    qualitySection
-                    outputSection
-                    advancedSection
+                    TargetSizeSection(selection: $targetSelection)
+                    QualitySection(qualityMode: $settings.qualityMode)
+                    OutputSection(settings: $settings, kinds: [input.fileKind])
+                    AdvancedSettingsSection(settings: $settings)
                     estimateSection
                     compressButton
                 }
@@ -44,8 +70,11 @@ struct FileReviewView: View {
         }
         .navigationTitle("Review")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: targetSelection.targetSizeBytes) { _, newValue in
+            settings.targetSizeBytes = newValue
+        }
         .task(id: settings) {
-            await updateEstimate()
+            await debouncedEstimate()
         }
         .alert("Compression failed", isPresented: Binding(
             get: { errorMessage != nil },
@@ -68,104 +97,22 @@ struct FileReviewView: View {
             HStack {
                 Label(FileSizeFormat.string(from: input.originalSizeBytes), systemImage: "internaldrive")
                 Spacer()
-                Label(input.fileKind.displayName, systemImage: kindIcon)
+                Label(input.fileKind.displayName, systemImage: input.fileKind.symbolName)
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)
         }
     }
 
-    private var targetSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Target size")
-                .font(.headline)
-            Picker("Preset", selection: $selectedPreset) {
-                ForEach(TargetSizePreset.allCases) { preset in
-                    Text(preset.title).tag(preset)
-                }
-            }
-            .pickerStyle(.menu)
-            .onChange(of: selectedPreset) { _, preset in
-                settings.targetSizeBytes = preset.bytes
-            }
-
-            HStack {
-                TextField("Custom size", text: $customTarget)
-                    .keyboardType(.decimalPad)
-                    .textFieldStyle(.roundedBorder)
-                    .onSubmit(applyCustomTarget)
-                    .onChange(of: customTarget) { _, _ in applyCustomTarget() }
-                Picker("Unit", selection: $customUnit) {
-                    ForEach(SizeUnit.allCases) { unit in
-                        Text(unit.rawValue).tag(unit)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .frame(width: 120)
-                .onChange(of: customUnit) { _, _ in applyCustomTarget() }
-            }
-            Text("Current target: \(settings.targetSizeBytes.map(FileSizeFormat.string(from:)) ?? "No limit")")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
+    /// The video engine's planned resolution and codec, promoted out of the
+    /// warning list: it is the most useful thing on this screen for a video and
+    /// it belongs before the compression, not after it.
+    private var videoPlanWarning: CompressionWarning? {
+        estimate?.warnings.first { $0.isVideoOutputPlan }
     }
 
-    private var qualitySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Quality")
-                .font(.headline)
-            Picker("Quality", selection: $settings.qualityMode) {
-                ForEach(QualityMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-
-    private var outputSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Output")
-                .font(.headline)
-            Picker("Format", selection: $settings.outputFormat) {
-                ForEach(availableOutputFormats) { format in
-                    Text(format.title).tag(format)
-                }
-            }
-            .pickerStyle(.menu)
-
-            if input.fileKind == .video {
-                Picker("Resolution", selection: Binding(
-                    get: { settings.videoResolutionPreset ?? .auto },
-                    set: { settings.videoResolutionPreset = $0 }
-                )) {
-                    ForEach(VideoResolutionPreset.allCases) { preset in
-                        Text(preset.title).tag(preset)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-        }
-    }
-
-    private var advancedSection: some View {
-        DisclosureGroup("Advanced") {
-            VStack(alignment: .leading, spacing: 14) {
-                Toggle("Remove metadata", isOn: $settings.stripMetadata)
-                    .accessibilityIdentifier("advanced-remove-metadata-toggle")
-                Toggle("Preserve transparency when possible", isOn: $settings.preserveTransparency)
-                    .accessibilityIdentifier("advanced-preserve-transparency-toggle")
-                Toggle("Prefer smaller modern format", isOn: $settings.preferHEICWhenAvailable)
-                    .accessibilityIdentifier("advanced-prefer-modern-format-toggle")
-                Toggle("Allow resolution downscale", isOn: $settings.allowResolutionDownscale)
-                    .accessibilityIdentifier("advanced-allow-downscale-toggle")
-            }
-            .toggleStyle(AdvancedSwitchToggleStyle())
-            .font(.subheadline)
-            .padding(.top, 8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    private var otherWarnings: [CompressionWarning] {
+        (estimate?.warnings ?? []).filter { !$0.isVideoOutputPlan }
     }
 
     @ViewBuilder
@@ -181,6 +128,10 @@ struct FileReviewView: View {
             }
 
             if let estimate {
+                if let videoPlanWarning {
+                    VideoOutputPlanRow(warning: videoPlanWarning)
+                }
+
                 HStack {
                     Label(estimate.predictedQuality.title, systemImage: "sparkle.magnifyingglass")
                     Spacer()
@@ -197,7 +148,7 @@ struct FileReviewView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                ForEach(estimate.warnings) { warning in
+                ForEach(otherWarnings) { warning in
                     WarningRow(warning: warning)
                 }
             } else {
@@ -224,45 +175,27 @@ struct FileReviewView: View {
         .accessibilityIdentifier("compress-button")
     }
 
-    private var kindIcon: String {
-        switch input.fileKind {
-        case .image: "photo"
-        case .pdf: "doc.richtext"
-        case .video: "video"
-        case .archive: "archivebox"
-        case .unsupported: "questionmark.document"
-        }
-    }
-
-    private var availableOutputFormats: [OutputFormat] {
-        switch input.fileKind {
-        case .image:
-            [.automatic, .jpeg, .heic, .png, .pdf]
-        case .pdf:
-            [.automatic, .pdf]
-        case .video:
-            [.automatic, .mp4, .mov]
-        case .archive:
-            [.zip]
-        case .unsupported:
-            [.automatic]
-        }
-    }
-
-    private func applyCustomTarget() {
-        if let parsed = TargetSizeParser.parse(customTarget, unit: customUnit) {
-            settings.targetSizeBytes = parsed
-        }
-    }
-
-    private func updateEstimate() async {
-        isEstimating = true
-        defer { isEstimating = false }
+    /// Waits for the controls to settle, then estimates — and refuses to publish
+    /// if a newer run has started in the meantime.
+    private func debouncedEstimate() async {
+        estimateToken &+= 1
+        let token = estimateToken
         do {
-            estimate = try await environment.compressionRouter.estimate(input: input, settings: settings)
+            try await Task.sleep(nanoseconds: Self.estimateDebounceNanoseconds)
         } catch {
-            estimate = nil
+            return // superseded or the view went away
         }
+        guard !Task.isCancelled, token == estimateToken else { return }
+
+        isEstimating = true
+        defer {
+            if token == estimateToken {
+                isEstimating = false
+            }
+        }
+        let next = try? await environment.compressionRouter.estimate(input: input, settings: settings)
+        guard !Task.isCancelled, token == estimateToken else { return }
+        estimate = next
     }
 
     private func startCompression() {
@@ -294,76 +227,5 @@ struct FileReviewView: View {
                 }
             }
         }
-    }
-}
-
-private struct AdvancedSwitchToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button {
-            withAnimation(.snappy(duration: 0.18)) {
-                configuration.isOn.toggle()
-            }
-        } label: {
-            HStack(alignment: .center, spacing: 12) {
-                configuration.label
-                    .foregroundStyle(.primary)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(3)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .layoutPriority(1)
-
-                AdvancedSwitch(isOn: configuration.isOn)
-                    .frame(width: 64, alignment: .trailing)
-            }
-            .contentShape(Rectangle())
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .buttonStyle(.plain)
-        .accessibilityValue(configuration.isOn ? "On" : "Off")
-    }
-}
-
-private struct AdvancedSwitch: View {
-    let isOn: Bool
-
-    var body: some View {
-        ZStack(alignment: isOn ? .trailing : .leading) {
-            Capsule()
-                .fill(isOn ? Color.accentColor : Color(.tertiarySystemFill))
-
-            Circle()
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.18), radius: 1, x: 0, y: 1)
-                .padding(3)
-        }
-        .frame(width: 54, height: 32)
-        .overlay {
-            Capsule()
-                .strokeBorder(Color.primary.opacity(isOn ? 0 : 0.12), lineWidth: 1)
-        }
-        .accessibilityHidden(true)
-    }
-}
-
-private struct WarningRow: View {
-    let warning: CompressionWarning
-
-    var body: some View {
-        Label {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(warning.title)
-                    .font(.caption.weight(.semibold))
-                Text(warning.message)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        } icon: {
-            Image(systemName: warning.severity == .blocking ? "xmark.octagon" : "exclamationmark.triangle")
-                .foregroundStyle(warning.severity == .info ? Color.secondary : Color.orange)
-        }
-        .padding(10)
-        .background(Color(.tertiarySystemFill))
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 }

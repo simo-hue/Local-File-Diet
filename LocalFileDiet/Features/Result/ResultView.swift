@@ -9,8 +9,15 @@ struct ResultView: View {
     let input: CompressionInput
     let result: CompressionResult
     let settings: CompressionSettings
-    let onTryAgain: (CompressionInput) -> Void
+    /// Carries the settings the next run should start from. Two buttons that
+    /// handed back the same input — and therefore re-read the saved defaults —
+    /// were two buttons that did the same nothing.
+    let onTryAgain: (CompressionInput, CompressionSettings) -> Void
     let onStartNewImport: () -> Void
+
+    private var status: ResultStatus {
+        ResultStatus.make(result: result, targetSizeBytes: settings.targetSizeBytes)
+    }
 
     var body: some View {
         ScrollView {
@@ -46,12 +53,27 @@ struct ResultView: View {
 
     private var statusHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(result.targetReached ? "Target reached" : "Target not reached", systemImage: result.targetReached ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
+            Label(status.title, systemImage: status.systemImage)
                 .font(.title2.weight(.bold))
-                .foregroundStyle(result.targetReached ? .green : .orange)
+                .foregroundStyle(statusColor)
+                .accessibilityIdentifier("result-status")
+            if let detail = status.detail {
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             Text(result.outputFilename)
                 .font(.headline)
                 .lineLimit(2)
+        }
+    }
+
+    private var statusColor: Color {
+        switch status.tone {
+        case .success: .green
+        case .neutral: .primary
+        case .caution: .orange
         }
     }
 
@@ -74,13 +96,7 @@ struct ResultView: View {
                 Text("Notes")
                     .font(.headline)
                 ForEach(result.warnings) { warning in
-                    Label {
-                        Text(warning.message)
-                            .font(.subheadline)
-                    } icon: {
-                        Image(systemName: warning.severity == .info ? "info.circle" : "exclamationmark.triangle")
-                    }
-                    .foregroundStyle(.secondary)
+                    WarningRow(warning: warning)
                 }
             }
         }
@@ -116,17 +132,7 @@ struct ResultView: View {
                 .disabled(isSavingToPhotos)
             }
 
-            HStack {
-                Button("Try Smaller") {
-                    onTryAgain(input)
-                }
-                .buttonStyle(.bordered)
-
-                Button("Better Quality") {
-                    onTryAgain(input)
-                }
-                .buttonStyle(.bordered)
-            }
+            retryButtons
 
             Button {
                 onStartNewImport()
@@ -136,6 +142,32 @@ struct ResultView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
+        }
+    }
+
+    /// Each button is shown only when it has somewhere to go. A button that is
+    /// visible but cannot change anything is the bug this replaces.
+    @ViewBuilder
+    private var retryButtons: some View {
+        let smaller = settings.trySmaller()
+        let better = settings.betterQuality()
+        if smaller != nil || better != nil {
+            HStack {
+                if let smaller {
+                    Button("Try Smaller") {
+                        onTryAgain(input, smaller)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("try-smaller-button")
+                }
+                if let better {
+                    Button("Better Quality") {
+                        onTryAgain(input, better)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("better-quality-button")
+                }
+            }
         }
     }
 

@@ -6,7 +6,12 @@ require "xcodeproj"
 ROOT = File.expand_path("..", __dir__)
 PROJECT_PATH = File.join(ROOT, "LocalFileDiet.xcodeproj")
 
-project = Xcodeproj::Project.new(PROJECT_PATH)
+# Must match the objectVersion and team of the committed project, otherwise
+# regenerating silently downgrades the project format and wipes code signing.
+OBJECT_VERSION = 54
+DEVELOPMENT_TEAM = "8528AN28A3"
+
+project = Xcodeproj::Project.new(PROJECT_PATH, false, OBJECT_VERSION)
 project.root_object.attributes["ORGANIZATIONNAME"] = "simo-hue"
 
 app_target = project.new_target(:application, "LocalFileDiet", :ios, "17.0")
@@ -83,7 +88,7 @@ end
     settings["TARGETED_DEVICE_FAMILY"] = "1"
     settings["SUPPORTED_PLATFORMS"] = "iphoneos iphonesimulator"
     settings["CODE_SIGN_STYLE"] = "Automatic"
-    settings["DEVELOPMENT_TEAM"] = ""
+    settings["DEVELOPMENT_TEAM"] = DEVELOPMENT_TEAM
     settings["MARKETING_VERSION"] = "1.0"
     settings["CURRENT_PROJECT_VERSION"] = "1"
     settings["ENABLE_USER_SCRIPT_SANDBOXING"] = "YES"

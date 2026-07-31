@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 protocol FileImportServicing {
     func importFile(from url: URL) async throws -> CompressionInput
     func importPhotoFile(from url: URL, suggestedName: String?) async throws -> CompressionInput
-    func importSharedFileIfAvailable() async throws -> CompressionInput?
+    func importSharedFilesIfAvailable() async throws -> [CompressionInput]
 }
 
 struct FileImportService: FileImportServicing {
@@ -39,21 +39,28 @@ struct FileImportService: FileImportServicing {
         try await createInput(from: url, preferredFilename: suggestedName)
     }
 
-    func importSharedFileIfAvailable() async throws -> CompressionInput? {
+    /// The share extension can now hand over more than one attachment, so this
+    /// drains the whole manifest. A file that fails to import is skipped rather
+    /// than taking the rest of the share with it.
+    func importSharedFilesIfAvailable() async throws -> [CompressionInput] {
         guard let container = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
-            return nil
+            return []
         }
         let manifestURL = container.appendingPathComponent("Incoming/share-manifest.json")
         guard fileManager.fileExists(atPath: manifestURL.path) else {
-            return nil
+            return []
         }
         let data = try Data(contentsOf: manifestURL)
         let manifest = try JSONDecoder().decode(SharedImportManifest.self, from: data)
-        guard let item = manifest.items.first else { return nil }
-        let input = try await createInput(from: item.fileURL, preferredFilename: item.originalFilename)
-        try? fileManager.removeItem(at: item.fileURL)
+        var inputs: [CompressionInput] = []
+        for item in manifest.items {
+            if let input = try? await createInput(from: item.fileURL, preferredFilename: item.originalFilename) {
+                inputs.append(input)
+            }
+            try? fileManager.removeItem(at: item.fileURL)
+        }
         try? fileManager.removeItem(at: manifestURL)
-        return input
+        return inputs
     }
 
     private func createInput(from sourceURL: URL, preferredFilename: String?) async throws -> CompressionInput {

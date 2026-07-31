@@ -104,11 +104,18 @@ enum QualityMode: String, Codable, CaseIterable, Sendable, Hashable, Identifiabl
         }
     }
 
-    var pdfDPISequence: [CGFloat] {
+    /// Bounds for the PDF engine's measured DPI search.
+    ///
+    /// This replaced a fixed ladder of four DPI values per mode, which the old
+    /// engine walked exhaustively. The search now starts from a measured page
+    /// and only needs to know how far it is allowed to move: the lower bound is
+    /// where a scan stops being readable, the upper bound is where more pixels
+    /// stop being worth their bytes.
+    var pdfDPIRange: ClosedRange<CGFloat> {
         switch self {
-        case .bestQuality: [220, 200, 180, 160]
-        case .balanced: [180, 160, 150, 130]
-        case .smallestFile: [130, 115, 100, 90]
+        case .bestQuality: 150...220
+        case .balanced: 110...180
+        case .smallestFile: 72...130
         }
     }
 
@@ -229,15 +236,49 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
     static let rasterizesPDF = CompressionWarning(
         id: "rasterizesPDF",
         severity: .caution,
-        title: "PDF will be rebuilt as images",
-        message: "This can reduce scanned PDFs a lot, but selectable text, links, forms, and annotations may be lost."
+        title: "Photo pages will be rebuilt",
+        message: "Pages that are mostly photo or scan get rebuilt as images. Text pages keep their selectable text, but links and annotations on rebuilt pages may be lost."
     )
 
-    static let vectorPDFProtected = CompressionWarning(
-        id: "vectorPDF",
-        severity: .info,
-        title: "Mostly text PDF",
-        message: "This looks like a text or vector PDF, so aggressive scan compression is avoided by default."
+    /// The same warning, told in terms of how much of the document it touches.
+    /// Only the photo pages are rebuilt, so "12 of 200 pages" is a very
+    /// different promise from "your PDF will become pictures".
+    static func pdfPagesRebuilt(imageDominantPages: Int, of pageCount: Int) -> CompressionWarning {
+        CompressionWarning(
+            id: rasterizesPDF.id,
+            severity: .caution,
+            title: rasterizesPDF.title,
+            message: "\(imageDominantPages) of \(pageCount) page\(pageCount == 1 ? "" : "s") are mostly photo or scan and will be rebuilt as images. The other pages keep their selectable text, but links and annotations on rebuilt pages may be lost."
+        )
+    }
+
+    /// No page can be rebuilt without costing the user their text, so nothing is.
+    ///
+    /// `imagesUnderText` covers the scanned-and-then-OCRed document: it does hold
+    /// big pictures, but every one of them sits under searchable text, and saying
+    /// "no photos inside" would be a lie.
+    static func pdfTextOnly(smallestFileRequested: Bool, imagesUnderText: Bool = false) -> CompressionWarning {
+        let message: String
+        if imagesUnderText {
+            message = "Every page in this PDF has selectable text on it, including the pages with pictures. The only way to shrink those pages is to rebuild them as images, which would throw the text away, so your original file was kept unchanged."
+        } else if smallestFileRequested {
+            message = "This PDF is text and drawings, with no photos or scans inside. Smallest file would have to turn every page into a picture, which throws away the selectable text and often makes the file bigger, so your original was kept unchanged."
+        } else {
+            message = "This PDF is text and drawings, with no photos or scans inside. There is nothing to re-compress without destroying the text, so your original file was kept unchanged."
+        }
+        return CompressionWarning(
+            id: "pdfTextOnly",
+            severity: .info,
+            title: "Nothing to shrink here",
+            message: message
+        )
+    }
+
+    static let pdfAnnotations = CompressionWarning(
+        id: "pdfAnnotations",
+        severity: .caution,
+        title: "PDF has annotations",
+        message: "Interactive annotations or forms may not survive a page rebuild."
     )
 
     static let heicCompatibility = CompressionWarning(
@@ -247,11 +288,53 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
         message: "HEIC can be smaller, but older websites may not accept it."
     )
 
+    static let transparencyFlattened = CompressionWarning(
+        id: "transparencyFlattened",
+        severity: .caution,
+        title: "Transparency removed",
+        message: "This image had transparent areas. The chosen format cannot store them, so they were filled with white."
+    )
+
+    static let keptOriginal = CompressionWarning(
+        id: "keptOriginal",
+        severity: .info,
+        title: "Original kept",
+        message: "This file was already as small as it can get with these settings, so your original file was kept unchanged."
+    )
+
     static let videoPrecision = CompressionWarning(
         id: "videoPrecision",
         severity: .info,
-        title: "Estimated video target",
-        message: "Video export uses local Apple presets, so the final size can be close to the target but not exact."
+        title: "Aiming at your target",
+        message: "The video is re-encoded at a bitrate worked out from your target size, so it should land just under it. Very short clips and very small targets can still finish a little off."
+    )
+
+    /// The reader/writer pipeline could not run for this file, so the engine
+    /// used a built-in Apple preset instead. Presets carry fixed bitrates, so
+    /// the size is whatever the preset produces — this is the one case where
+    /// the app cannot aim.
+    static let videoPresetFallback = CompressionWarning(
+        id: "videoPresetFallback",
+        severity: .caution,
+        title: "Used a built-in preset",
+        message: "This video could not be re-encoded at a chosen bitrate, so a built-in Apple preset was used instead. The file is still smaller, but its size is approximate rather than aimed at your target."
+    )
+
+    /// Genuinely useful before pressing go: "will export at 1280x720, H.264".
+    static func videoOutputPlan(width: Int, height: Int, codec: String) -> CompressionWarning {
+        CompressionWarning(
+            id: "videoOutputPlan",
+            severity: .info,
+            title: "Will export at \(width)x\(height)",
+            message: "This video will be re-encoded at \(width)x\(height) using \(codec)."
+        )
+    }
+
+    static let videoModernCodec = CompressionWarning(
+        id: "videoModernCodec",
+        severity: .caution,
+        title: "Modern video format",
+        message: "HEVC needs about half the bitrate of H.264 for the same picture, but some older computers, websites and phones cannot play it. Turn off \"Prefer smaller modern format\" if the file has to work everywhere."
     )
 }
 
@@ -263,7 +346,7 @@ struct CompressionOperation: Codable, Identifiable, Sendable, Hashable {
     static let downsample = CompressionOperation(id: "downsample", title: "Downsample pixels")
     static let reencode = CompressionOperation(id: "reencode", title: "Re-encode")
     static let pdfRasterRebuild = CompressionOperation(id: "pdfRasterRebuild", title: "Rebuild scanned pages")
-    static let videoExport = CompressionOperation(id: "videoExport", title: "Export with Apple video preset")
+    static let videoExport = CompressionOperation(id: "videoExport", title: "Re-encode video at a target bitrate")
     static let zip = CompressionOperation(id: "zip", title: "Create ZIP")
     static let verifyOutput = CompressionOperation(id: "verifyOutput", title: "Verify output")
 }

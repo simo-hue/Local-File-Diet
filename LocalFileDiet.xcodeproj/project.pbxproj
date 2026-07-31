@@ -8,37 +8,51 @@
 
 /* Begin PBXBuildFile section */
 		00B66678AC83E76BAD1ED9C9 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 32C43AC70BE38F34AF26DD7F /* Localizable.xcstrings */; };
+		0C4BAB67A7EBC908B8B547E6 /* BatchRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6177A08B1C0F135162AD70 /* BatchRunner.swift */; };
 		115954CC86E1FF8E327AAFE7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
+		153018AC2502E963325C2FD9 /* BatchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA4E802DAAEF35C984B9A81 /* BatchResultView.swift */; };
 		15568686E6ED095AE381A4E2 /* CompressionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC2D51A34FA7E768ECC4F81 /* CompressionHelpers.swift */; };
 		189977AC37A526155493674A /* DocumentExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99953C922C60FBC3F73060B0 /* DocumentExporter.swift */; };
 		1B18B73C3C04E0209CAF982E /* FileTypeDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03342CE95686810F6C37124C /* FileTypeDetectorTests.swift */; };
+		1EBB69DD7B746D71C2D683D7 /* BatchRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0981E9F3FA35ED7C25BC865 /* BatchRunnerTests.swift */; };
 		234639078CC6C8C77B025489 /* Local File Diet Share.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0F6A78EE31D4916A43FB8D9A /* Local File Diet Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		23BD704A9DB9D0E3AF5F268F /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5C6F8A0161449030F2CBD /* AppEnvironment.swift */; };
 		2661AA13A7D367E435392718 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
 		29579B4960799E2296A92887 /* TemporaryFileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134A679F8ED864BAC2BE6D41 /* TemporaryFileStoreTests.swift */; };
 		3581AD2C5AE11B28E294A918 /* PhotoPickerTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2A34CF6FA3F4AEAA9B98D4 /* PhotoPickerTransfer.swift */; };
+		3CC2C643E30319E3F2D89E17 /* SettingsAdjustments.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAAB0B04687D40F03BA3DA /* SettingsAdjustments.swift */; };
 		3CFB34B3BF9B50914E09C552 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C136263B012BB0812841B2 /* SettingsView.swift */; };
 		4E9A1C08765C02DF69EA20D0 /* ImageCompressionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6345439EE1788D989BDB94 /* ImageCompressionEngineTests.swift */; };
+		5E819A8B55890EC007C6B2D8 /* VideoEncodingPlanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC3571826FDA3F1578DAA92 /* VideoEncodingPlanTests.swift */; };
 		5F86C5F7556D46BA3789BD9F /* CoreUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF794AF0E4F152FADE07BFAE /* CoreUtilityTests.swift */; };
 		68AD133388E9E42FCE3783E6 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17233085FEAC97CC59CB1D80 /* HistoryStore.swift */; };
 		7CB2D62C2B2BDF486F7B9E58 /* PDFCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7290C3C57AEAD89BFE68E9D8 /* PDFCompressionEngine.swift */; };
+		887A676DFAC964FCBB6B309D /* PDFPageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B78227A1981E5AB424161C /* PDFPageWriter.swift */; };
 		89CC5B920D1D1DB2FE87D0D3 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592C914EAF296786A93111C /* AppLogger.swift */; };
 		8A331258860B871BA69650E5 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D763C2A2A69DEB3B2D47FD5 /* ResultView.swift */; };
 		8BA79A531FA577E396508A56 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB5E36B4CBCB3F414A759C8 /* HomeView.swift */; };
 		8ED06C52AF70C79A15B13A46 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D712F758E48407BF1A87EA3 /* AppError.swift */; };
 		8FD58BAFD4C7B34666B3C3F1 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2BA1DF1C1E1CDC9669F1AA /* AppRootView.swift */; };
+		9D19E25C67E040B897303F23 /* CompressionSettingsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FACC8993A4D702E8FF3C0C /* CompressionSettingsSections.swift */; };
 		9EE743FABB3C161579ECCAA0 /* FileTypeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E71F8570926D5C7170B8AE /* FileTypeDetector.swift */; };
 		9F2BD3800DD6AB51D1934372 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
 		9F6AAA6A0D064C84F11F3776 /* ImageCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC85AFCDEA50A0FA5F32E9 /* ImageCompressionEngine.swift */; };
 		A218F6C3AF43C8A21C7FBB5A /* FileImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9107BF3BE4ABBEF0AEFB6 /* FileImportService.swift */; };
+		A8F46A4FE57F2A2FC183BEEF /* ArchiveCompressionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17789C534565AD7B0BDA77C5 /* ArchiveCompressionEngineTests.swift */; };
 		A961AB508AE4893091758B08 /* ArchiveCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB2CC2C1F673B1289BE71C0 /* ArchiveCompressionEngine.swift */; };
 		B424EDF686C7B3CEEF55670F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 647FAE6EA199583FCCE0A6A4 /* Assets.xcassets */; };
 		B59A7573C6D60BE777148390 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
 		BD6A22D01F7064BFA8757250 /* FilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD9BE9E750829A2E5B8F9F1 /* FilePreviewView.swift */; };
+		BE17A050DD8DC41C9B057AE8 /* BatchArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C37DDF2520DB35BA5F4C98F /* BatchArchive.swift */; };
 		C010AC2C6D0629FD5C3194CB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979B4644137A2729D01ED54F /* ShareViewController.swift */; };
+		C60F19190FF241F393283EBD /* VideoEncodingPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298329961569FCEB355028DF /* VideoEncodingPlan.swift */; };
 		CC7DE946B8DD6B56C4CA19E6 /* CompressionCancellationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB2A376674E4B772BB6703C /* CompressionCancellationTests.swift */; };
 		CECFC50A441C34F1F2EEFCE4 /* CompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223032D6261750DEC0E9B850 /* CompressionEngine.swift */; };
+		CF615586F45A3ACBDE7C93BF /* BatchReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E524A36BE6C74578873A1E46 /* BatchReviewView.swift */; };
+		D6022A614E0BE22B59A07727 /* ResultPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8073D3D238EC4ADD652C2E88 /* ResultPresentation.swift */; };
+		D6DAC00F635770C79846CDF4 /* TargetSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66816BEC7F2D14C2D8007951 /* TargetSelection.swift */; };
 		DA7A77118BFCB70554E123DE /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798067F758FB58A80CE70463 /* Formatters.swift */; };
+		DA9D34F6390A48F18D97E6C3 /* PDFCompressionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74F5A6780149F143325CD06 /* PDFCompressionEngineTests.swift */; };
 		DDB922CF4D07B80D57EBD686 /* CompressionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524FBD2F38F7BF303A10E342 /* CompressionModels.swift */; };
 		E31A5F3859BB99E3B990D374 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE6A78A2F9FAB6493B198E6 /* ShareSheet.swift */; };
 		E8A01C14C54B6DD41C9C3BC9 /* LocalFileDietApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C735DF38DEA448824F316DD /* LocalFileDietApp.swift */; };
@@ -51,6 +65,7 @@
 		F7932A924CDE4629CB2DD926 /* CompressionProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308C496E09D27558C33161A0 /* CompressionProgressView.swift */; };
 		FB3B25C827054E762D314F95 /* VideoCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB821949E57EC9633D4B920 /* VideoCompressionEngine.swift */; };
 		FE30BE54BEC8BE314D73F2B7 /* FileReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485FEBB0F128CBCA120D940 /* FileReviewView.swift */; };
+		FE961308CBC9FB1A0528B409 /* TargetSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D8567218B38C0409C951A /* TargetSelectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,16 +107,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00B78227A1981E5AB424161C /* PDFPageWriter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFPageWriter.swift; path = LocalFileDiet/Core/Compression/PDFPageWriter.swift; sourceTree = "<group>"; };
 		03342CE95686810F6C37124C /* FileTypeDetectorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileTypeDetectorTests.swift; path = LocalFileDietTests/FileTypeDetectorTests.swift; sourceTree = "<group>"; };
 		0D763C2A2A69DEB3B2D47FD5 /* ResultView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResultView.swift; path = LocalFileDiet/Features/Result/ResultView.swift; sourceTree = "<group>"; };
 		0F6A78EE31D4916A43FB8D9A /* Local File Diet Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Local File Diet Share.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		134A679F8ED864BAC2BE6D41 /* TemporaryFileStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TemporaryFileStoreTests.swift; path = LocalFileDietTests/TemporaryFileStoreTests.swift; sourceTree = "<group>"; };
 		15A70AA12A815CC95797B7D8 /* ShareExtension.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = ShareExtension.entitlements; path = LocalFileDietShareExtension/ShareExtension.entitlements; sourceTree = "<group>"; };
 		17233085FEAC97CC59CB1D80 /* HistoryStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HistoryStore.swift; path = LocalFileDiet/Core/Persistence/HistoryStore.swift; sourceTree = "<group>"; };
+		17789C534565AD7B0BDA77C5 /* ArchiveCompressionEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArchiveCompressionEngineTests.swift; path = LocalFileDietTests/ArchiveCompressionEngineTests.swift; sourceTree = "<group>"; };
 		1B6345439EE1788D989BDB94 /* ImageCompressionEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionEngineTests.swift; path = LocalFileDietTests/ImageCompressionEngineTests.swift; sourceTree = "<group>"; };
 		1EB821949E57EC9633D4B920 /* VideoCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoCompressionEngine.swift; path = LocalFileDiet/Core/Compression/VideoCompressionEngine.swift; sourceTree = "<group>"; };
+		1FA4E802DAAEF35C984B9A81 /* BatchResultView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BatchResultView.swift; path = LocalFileDiet/Features/Batch/BatchResultView.swift; sourceTree = "<group>"; };
 		223032D6261750DEC0E9B850 /* CompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionEngine.swift; path = LocalFileDiet/Core/Compression/CompressionEngine.swift; sourceTree = "<group>"; };
 		28ADC9F02D6B7D660271C82A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = LocalFileDiet/Resources/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		298329961569FCEB355028DF /* VideoEncodingPlan.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoEncodingPlan.swift; path = LocalFileDiet/Core/Compression/VideoEncodingPlan.swift; sourceTree = "<group>"; };
 		2C735DF38DEA448824F316DD /* LocalFileDietApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalFileDietApp.swift; path = LocalFileDiet/App/LocalFileDietApp.swift; sourceTree = "<group>"; };
 		308C496E09D27558C33161A0 /* CompressionProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionProgressView.swift; path = LocalFileDiet/Features/CompressionProgress/CompressionProgressView.swift; sourceTree = "<group>"; };
 		32C43AC70BE38F34AF26DD7F /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = LocalFileDiet/Resources/Localizable.xcstrings; sourceTree = "<group>"; };
@@ -114,9 +133,14 @@
 		4FB2A376674E4B772BB6703C /* CompressionCancellationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionCancellationTests.swift; path = LocalFileDietTests/CompressionCancellationTests.swift; sourceTree = "<group>"; };
 		524FBD2F38F7BF303A10E342 /* CompressionModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionModels.swift; path = LocalFileDiet/Core/Models/CompressionModels.swift; sourceTree = "<group>"; };
 		5485FEBB0F128CBCA120D940 /* FileReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileReviewView.swift; path = LocalFileDiet/Features/FileReview/FileReviewView.swift; sourceTree = "<group>"; };
+		562D8567218B38C0409C951A /* TargetSelectionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TargetSelectionTests.swift; path = LocalFileDietTests/TargetSelectionTests.swift; sourceTree = "<group>"; };
+		5A6177A08B1C0F135162AD70 /* BatchRunner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BatchRunner.swift; path = LocalFileDiet/Features/Batch/BatchRunner.swift; sourceTree = "<group>"; };
+		5C37DDF2520DB35BA5F4C98F /* BatchArchive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BatchArchive.swift; path = LocalFileDiet/Features/Batch/BatchArchive.swift; sourceTree = "<group>"; };
 		5DB5E36B4CBCB3F414A759C8 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = LocalFileDiet/Features/Home/HomeView.swift; sourceTree = "<group>"; };
 		5FDC85AFCDEA50A0FA5F32E9 /* ImageCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionEngine.swift; path = LocalFileDiet/Core/Compression/ImageCompressionEngine.swift; sourceTree = "<group>"; };
+		62FACC8993A4D702E8FF3C0C /* CompressionSettingsSections.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionSettingsSections.swift; path = LocalFileDiet/Features/Shared/CompressionSettingsSections.swift; sourceTree = "<group>"; };
 		647FAE6EA199583FCCE0A6A4 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = LocalFileDiet/Resources/Assets.xcassets; sourceTree = "<group>"; };
+		66816BEC7F2D14C2D8007951 /* TargetSelection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TargetSelection.swift; path = LocalFileDiet/Core/Models/TargetSelection.swift; sourceTree = "<group>"; };
 		69A9107BF3BE4ABBEF0AEFB6 /* FileImportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileImportService.swift; path = LocalFileDiet/Core/FileImport/FileImportService.swift; sourceTree = "<group>"; };
 		69C136263B012BB0812841B2 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = LocalFileDiet/Features/Settings/SettingsView.swift; sourceTree = "<group>"; };
 		6DC9FDBD6DAD79187F428936 /* PDFAnalyzerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFAnalyzerTests.swift; path = LocalFileDietTests/PDFAnalyzerTests.swift; sourceTree = "<group>"; };
@@ -125,20 +149,26 @@
 		769420965302517389AB3F8C /* LocalFileDietUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalFileDietUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		798067F758FB58A80CE70463 /* Formatters.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Formatters.swift; path = LocalFileDiet/Core/Models/Formatters.swift; sourceTree = "<group>"; };
 		7AD9BE9E750829A2E5B8F9F1 /* FilePreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FilePreviewView.swift; path = LocalFileDiet/Core/Preview/FilePreviewView.swift; sourceTree = "<group>"; };
+		8073D3D238EC4ADD652C2E88 /* ResultPresentation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResultPresentation.swift; path = LocalFileDiet/Core/Models/ResultPresentation.swift; sourceTree = "<group>"; };
 		8592C914EAF296786A93111C /* AppLogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLogger.swift; path = LocalFileDiet/Core/Logging/AppLogger.swift; sourceTree = "<group>"; };
 		8EB2CC2C1F673B1289BE71C0 /* ArchiveCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArchiveCompressionEngine.swift; path = LocalFileDiet/Core/Compression/ArchiveCompressionEngine.swift; sourceTree = "<group>"; };
 		979B4644137A2729D01ED54F /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = LocalFileDietShareExtension/ShareViewController.swift; sourceTree = "<group>"; };
 		99953C922C60FBC3F73060B0 /* DocumentExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentExporter.swift; path = LocalFileDiet/Core/FileExport/DocumentExporter.swift; sourceTree = "<group>"; };
 		99D33C9BB2C065BCBD9A5FE0 /* TemporaryFileStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TemporaryFileStore.swift; path = LocalFileDiet/Core/FileImport/TemporaryFileStore.swift; sourceTree = "<group>"; };
+		A74F5A6780149F143325CD06 /* PDFCompressionEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFCompressionEngineTests.swift; path = LocalFileDietTests/PDFCompressionEngineTests.swift; sourceTree = "<group>"; };
 		B324323A207E4ABBD4DA95C1 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = LocalFileDietShareExtension/Info.plist; sourceTree = "<group>"; };
 		BEC2D51A34FA7E768ECC4F81 /* CompressionHelpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionHelpers.swift; path = LocalFileDiet/Core/Compression/CompressionHelpers.swift; sourceTree = "<group>"; };
+		CDC3571826FDA3F1578DAA92 /* VideoEncodingPlanTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoEncodingPlanTests.swift; path = LocalFileDietTests/VideoEncodingPlanTests.swift; sourceTree = "<group>"; };
 		CFC3C0FB246054CB2D32A93B /* LocalFileDiet.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = LocalFileDiet.entitlements; path = LocalFileDiet/Support/LocalFileDiet.entitlements; sourceTree = "<group>"; };
 		D0E71F8570926D5C7170B8AE /* FileTypeDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileTypeDetector.swift; path = LocalFileDiet/Core/FileImport/FileTypeDetector.swift; sourceTree = "<group>"; };
 		D5B3843CBA99B1EC73A967D5 /* LocalFileDietTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalFileDietTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6DAAB0B04687D40F03BA3DA /* SettingsAdjustments.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsAdjustments.swift; path = LocalFileDiet/Core/Models/SettingsAdjustments.swift; sourceTree = "<group>"; };
+		E524A36BE6C74578873A1E46 /* BatchReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BatchReviewView.swift; path = LocalFileDiet/Features/Batch/BatchReviewView.swift; sourceTree = "<group>"; };
 		E6870BAF1C932CC40DF1B204 /* PhotoLibrarySaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PhotoLibrarySaver.swift; path = LocalFileDiet/Core/FileExport/PhotoLibrarySaver.swift; sourceTree = "<group>"; };
 		EB2A34CF6FA3F4AEAA9B98D4 /* PhotoPickerTransfer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PhotoPickerTransfer.swift; path = LocalFileDiet/Core/FileImport/PhotoPickerTransfer.swift; sourceTree = "<group>"; };
 		ECD5C6F8A0161449030F2CBD /* AppEnvironment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppEnvironment.swift; path = LocalFileDiet/App/AppEnvironment.swift; sourceTree = "<group>"; };
 		EF794AF0E4F152FADE07BFAE /* CoreUtilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreUtilityTests.swift; path = LocalFileDietTests/CoreUtilityTests.swift; sourceTree = "<group>"; };
+		F0981E9F3FA35ED7C25BC865 /* BatchRunnerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BatchRunnerTests.swift; path = LocalFileDietTests/BatchRunnerTests.swift; sourceTree = "<group>"; };
 		F40666C83B6C39B3C1F6C398 /* DocumentPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentPicker.swift; path = LocalFileDiet/Core/FileImport/DocumentPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +224,8 @@
 				C3FDDBCC76A6E8227FD91B39 /* Home */,
 				F8E1E5708183A9C82F9625A8 /* Result */,
 				4D1873B704249D7A1358A0EC /* Settings */,
+				39F13FDA581244E85B056676 /* Shared */,
+				8C97C8DB5563069E7F44BA54 /* Batch */,
 			);
 			name = Features;
 			sourceTree = "<group>";
@@ -237,6 +269,14 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		39F13FDA581244E85B056676 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				62FACC8993A4D702E8FF3C0C /* CompressionSettingsSections.swift */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
 		3FD55437FF040A89C58CAEB3 /* Preview */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +310,8 @@
 				5FDC85AFCDEA50A0FA5F32E9 /* ImageCompressionEngine.swift */,
 				7290C3C57AEAD89BFE68E9D8 /* PDFCompressionEngine.swift */,
 				1EB821949E57EC9633D4B920 /* VideoCompressionEngine.swift */,
+				00B78227A1981E5AB424161C /* PDFPageWriter.swift */,
+				298329961569FCEB355028DF /* VideoEncodingPlan.swift */,
 			);
 			name = Compression;
 			sourceTree = "<group>";
@@ -315,6 +357,17 @@
 			name = Support;
 			sourceTree = "<group>";
 		};
+		8C97C8DB5563069E7F44BA54 /* Batch */ = {
+			isa = PBXGroup;
+			children = (
+				5A6177A08B1C0F135162AD70 /* BatchRunner.swift */,
+				5C37DDF2520DB35BA5F4C98F /* BatchArchive.swift */,
+				E524A36BE6C74578873A1E46 /* BatchReviewView.swift */,
+				1FA4E802DAAEF35C984B9A81 /* BatchResultView.swift */,
+			);
+			name = Batch;
+			sourceTree = "<group>";
+		};
 		A09851B2682937448A90DA43 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,6 +395,11 @@
 				1B6345439EE1788D989BDB94 /* ImageCompressionEngineTests.swift */,
 				6DC9FDBD6DAD79187F428936 /* PDFAnalyzerTests.swift */,
 				134A679F8ED864BAC2BE6D41 /* TemporaryFileStoreTests.swift */,
+				17789C534565AD7B0BDA77C5 /* ArchiveCompressionEngineTests.swift */,
+				A74F5A6780149F143325CD06 /* PDFCompressionEngineTests.swift */,
+				CDC3571826FDA3F1578DAA92 /* VideoEncodingPlanTests.swift */,
+				F0981E9F3FA35ED7C25BC865 /* BatchRunnerTests.swift */,
+				562D8567218B38C0409C951A /* TargetSelectionTests.swift */,
 			);
 			name = LocalFileDietTests;
 			sourceTree = "<group>";
@@ -390,6 +448,9 @@
 				3D712F758E48407BF1A87EA3 /* AppError.swift */,
 				524FBD2F38F7BF303A10E342 /* CompressionModels.swift */,
 				798067F758FB58A80CE70463 /* Formatters.swift */,
+				66816BEC7F2D14C2D8007951 /* TargetSelection.swift */,
+				D6DAAB0B04687D40F03BA3DA /* SettingsAdjustments.swift */,
+				8073D3D238EC4ADD652C2E88 /* ResultPresentation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -616,6 +677,16 @@
 				8BA79A531FA577E396508A56 /* HomeView.swift in Sources */,
 				8A331258860B871BA69650E5 /* ResultView.swift in Sources */,
 				3CFB34B3BF9B50914E09C552 /* SettingsView.swift in Sources */,
+				887A676DFAC964FCBB6B309D /* PDFPageWriter.swift in Sources */,
+				C60F19190FF241F393283EBD /* VideoEncodingPlan.swift in Sources */,
+				D6DAC00F635770C79846CDF4 /* TargetSelection.swift in Sources */,
+				3CC2C643E30319E3F2D89E17 /* SettingsAdjustments.swift in Sources */,
+				D6022A614E0BE22B59A07727 /* ResultPresentation.swift in Sources */,
+				9D19E25C67E040B897303F23 /* CompressionSettingsSections.swift in Sources */,
+				0C4BAB67A7EBC908B8B547E6 /* BatchRunner.swift in Sources */,
+				BE17A050DD8DC41C9B057AE8 /* BatchArchive.swift in Sources */,
+				CF615586F45A3ACBDE7C93BF /* BatchReviewView.swift in Sources */,
+				153018AC2502E963325C2FD9 /* BatchResultView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,6 +708,11 @@
 				4E9A1C08765C02DF69EA20D0 /* ImageCompressionEngineTests.swift in Sources */,
 				EC607B4FD9CBEF1BDD0CACAC /* PDFAnalyzerTests.swift in Sources */,
 				29579B4960799E2296A92887 /* TemporaryFileStoreTests.swift in Sources */,
+				A8F46A4FE57F2A2FC183BEEF /* ArchiveCompressionEngineTests.swift in Sources */,
+				DA9D34F6390A48F18D97E6C3 /* PDFCompressionEngineTests.swift in Sources */,
+				5E819A8B55890EC007C6B2D8 /* VideoEncodingPlanTests.swift in Sources */,
+				1EBB69DD7B746D71C2D683D7 /* BatchRunnerTests.swift in Sources */,
+				FE961308CBC9FB1A0528B409 /* TargetSelectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
