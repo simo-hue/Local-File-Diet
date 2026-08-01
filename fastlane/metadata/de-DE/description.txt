@@ -1,0 +1,16 @@
+Local File Diet ist ein professionelles Tool für ein spezifisches Problem: das Verkleinern von Dateien, die zu groß für E-Mails, WhatsApp, Formulare oder öffentliche Portale sind, ohne die Qualität mehr als nötig zu beeinträchtigen.
+
+Im Gegensatz zu herkömmlichen Tools bietet dir Local File Diet eine präzise Kontrolle über die endgültige Dateigröße und verarbeitet alles lokal auf deinem Gerät. Keine Cloud-Uploads, keine Accounts, keine Abos.
+
+**HAUPTFUNKTIONEN:**
+• **Präzise Videokompression:** Lege eine genaue Zielgröße fest und die App erreicht diese (meist mit nur 4% Abweichung in einem Durchgang) dank intelligenter Bitraten-Berechnung.
+• **Smarte PDF-Kompression:** Reduziere PDF-Größen, während der Text vollständig markierbar bleibt. Bildlastige Seiten werden optimiert, während Textebenen perfekt erhalten bleiben.
+• **Stapelverarbeitung (Batch):** Wähle mehrere Dateien gleichzeitig aus und komprimiere sie in einem Durchgang. Speichere sie einzeln oder packe sie sofort in ein ZIP-Archiv.
+• **Bildoptimierung:** Entferne Metadaten, erhalte Transparenz (Alpha-Kanal) und skaliere intelligent herunter.
+• **Universelle Formatunterstützung:** Funktioniert mit Videos, Bildern, PDFs und ZIP-Archiven.
+• **Teilen-Erweiterung:** Komprimiere Dateien direkt aus jeder App heraus über das iOS Share Sheet.
+
+**PRIVATSPHÄRE ZUERST:**
+• **100% lokale Verarbeitung:** Deine Dateien verlassen niemals dein Gerät.
+• **Kein Tracking:** Was du auf deinem Gerät tust, bleibt auf deinem Gerät.
+• **Keine Abos:** Einmal zahlen, für immer nutzen.

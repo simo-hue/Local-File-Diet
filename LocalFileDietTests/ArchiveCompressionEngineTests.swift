@@ -1042,6 +1042,7 @@ final class ArchiveCompressionEngineTests: XCTestCase {
     /// Bytes this process has written to disk. `phys_footprint` answers "was it
     /// held in memory"; this answers "was it written out twice".
     private static func diskBytesWritten() -> Int64 {
+#if os(macOS)
         var info = rusage_info_v4()
         let outcome = withUnsafeMutablePointer(to: &info) { pointer -> Int32 in
             pointer.withMemoryRebound(to: rusage_info_t?.self, capacity: 1) { rebound in
@@ -1049,6 +1050,9 @@ final class ArchiveCompressionEngineTests: XCTestCase {
             }
         }
         return outcome == 0 ? Int64(info.ri_diskio_byteswritten) : -1
+#else
+        return -1
+#endif
     }
 
     /// Builds a ZIP byte for byte, so a fixture can claim whatever it likes about

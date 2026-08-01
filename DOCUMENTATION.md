@@ -90,3 +90,27 @@
   - *Honesty of user-facing copy*: Settings claimed "File names and paths are not logged" while `history.json` stored both and the home screen displayed them. Home claimed "Everything stays on your iPhone" without qualification, which every result screen's share sheet contradicts. Both rewritten, and the two falsified strings removed from `Localizable.xcstrings` so they no longer ship in the bundle. `OutputGuard.warningsAfterKeepingOriginal` now withdraws warnings that describe a rebuild which was discarded, so a user handed back their untouched original is no longer told their form fields stopped working. `zipCouldNotRepack` used to recite "encryption or ZIP64" for every failure including plain Finder-made archives; the message is now derived from the typed `ArchiveRefusal`. `Clear temporary files` now also clears the app group's `Incoming` directory, which held full copies of shared files and was never swept.
   - *Version*: `MARKETING_VERSION` 1.0 -> 2.0 and `CURRENT_PROJECT_VERSION` 1 -> 2 across all 8 build configurations, with the app and share extension matching (App Store Connect rejects a mismatched appex). A major bump rather than a point release: all four compression engines were rewritten and batch compression is new. `Scripts/generate_project.rb` was updated to the same values so a regeneration cannot silently revert them.
   - *Verification*: all 38 app source files type-check together against the real UIKit/SwiftUI/PDFKit via Mac Catalyst (`-target arm64-apple-ios17.0-macabi`, Swift 6, complete strict concurrency, `-warnings-as-errors`) with 0 errors and 0 warnings; the harness was canary-tested against a type error, an iOS-18-only symbol and a genuine Sendable violation. All 54 files parse. Every plist and the privacy manifest pass `plutil -lint`. ZIP output re-validated with `unzip -t` and `zipinfo`.
+
+- [2026-08-01]: Fix Compilation Error in ArchiveCompressionEngineTests
+  - *Details*: Conditionally compiled `diskBytesWritten` to avoid referencing `proc_pid_rusage` on iOS Simulator where it's unavailable.
+  - *Tech Notes*: Wrapped the body of `diskBytesWritten` in `#if os(macOS)` and returned -1 as a fallback.
+
+- [2026-08-01 22:45 CEST]: App Store Connect Metadata Rewrite
+  - *Details*: Created `APP_STORE_CONNECT_COPY.md` with updated app metadata reflecting the new capabilities (precise video targeting, batch processing, text-preserving PDFs) and removed the corresponding step 5 from `TO_SIMO_DO.md`.
+  - *Tech Notes*: Wrote a fresh copy of the App Store metadata including English and Italian localizations, Privacy info, Keywords, and Screenshot captions.
+
+- [2026-08-01 22:46 CEST]: Fastlane Deliver Setup
+  - *Details*: Created a `fastlane` directory containing the `Fastfile`, `Deliverfile`, and localized metadata folders (`en-US` and `it`) populated directly from `APP_STORE_CONNECT_COPY.md`.
+  - *Tech Notes*: Updated `Deliverfile` username to `mattioli.simone.10@gmail.com`. The user can now run `fastlane release` to upload the newly updated metadata to App Store Connect.
+
+- [2026-08-01 22:48 CEST]: Spanish and German App Store Localizations
+  - *Details*: Added Spanish (`es-ES`) and German (`de-DE`) translations for the App Store metadata.
+  - *Tech Notes*: Updated `APP_STORE_CONNECT_COPY.md` with the new languages and automatically populated the corresponding `fastlane/metadata/es-ES` and `fastlane/metadata/de-DE` directories via script. Shortened keywords/promo text limits.
+
+- [2026-08-01 22:54 CEST]: App Store Release Notes
+  - *Details*: Added "What's New" (release notes) for all languages (`en-US`, `es-ES`, `de-DE`, `it`).
+  - *Tech Notes*: Created `release_notes.txt` in all fastlane metadata directories with standard text "General improvements and bug fixes." and updated `APP_STORE_CONNECT_COPY.md`.
+
+- [2026-08-01 22:56 CEST]: Fix App Store Connect Required Fields
+  - *Details*: Resolved missing support URLs for ES, DE, IT and missing What's New for UK English (`en-GB`).
+  - *Tech Notes*: Copied `support_url.txt` to `es-ES`, `de-DE`, `it` folders and duplicated `en-US` to `en-GB`.
