@@ -1,50 +1,44 @@
 # Manual actions for Simo
 
-## 1. Build and run the tests on the Mac mini (required)
+Version is now **1.1.0 (build 2)**. Everything below needs you, because none of it can be done on the machine these changes were written on (Command Line Tools only, no Xcode).
 
-No Xcode is installed on the machine these changes were written on — Command Line Tools only. Nothing has been compiled for iOS or run in a simulator. Every file was parse-checked, and the whole non-SwiftUI layer (22 files: all four engines, all models, file import, persistence, the batch runner) type-checks together under Swift 6 with complete strict concurrency at the iOS 17 deployment target with **0 errors and 0 warnings**. The iOS build itself, and all SwiftUI rendering, are unverified.
+## 1. Build and test on the Mac mini — required
 
 ```bash
 xcodebuild -project LocalFileDiet.xcodeproj -scheme LocalFileDiet -destination 'platform=iOS Simulator,name=iPhone 17' build test
 ```
 
-Test files added across the five loops:
+All 38 app source files type-check against the real UIKit/SwiftUI/PDFKit via Mac Catalyst with 0 errors and 0 warnings under Swift 6 strict concurrency, so the app target should build. **The test target has never been compiled** — XCTest is not available here — so that is where a build failure is most likely.
 
-| File | Cases | Verified off-device? |
-|---|---|---|
-| `ArchiveCompressionEngineTests.swift` | 12 | Yes — ZIP proven against system `unzip`/`zipinfo` |
-| `ImageCompressionEngineTests.swift` | 7 new | Mostly — HEIC-alpha and image-to-PDF could not run |
-| `PDFCompressionEngineTests.swift` | 8 | Yes — engine runs unmodified on macOS |
-| `PDFAnalyzerTests.swift` | 5 (rewritten) | Yes |
-| `VideoEncodingPlanTests.swift` | 13 | Yes — plus real encodes against fixtures |
-| `BatchRunnerTests.swift`, `TargetSelectionTests.swift` | — | Logic yes, via harness; XCTest plumbing no |
-| `CoreUtilityTests.swift` | +10 | Yes |
+## 2. Check the build number before you upload
 
-Watch these two in particular, since no macOS harness could execute them:
-- the HEIC-with-alpha image case (HEIC encoding availability differs on device),
-- anything touching `UIGraphicsPDFRenderer` — though loop 3 moved PDF writing to Core Graphics, so this should now be moot.
+`CURRENT_PROJECT_VERSION` is set to **2**. App Store Connect rejects any build whose number is not higher than the last one you uploaded *for this version train*. If you already uploaded more than one build of 1.0, raise it — it is one `sed` over `project.pbxproj` plus the same two lines in `Scripts/generate_project.rb`.
 
-## 2. Smoke-test these by hand on a device
+If you would rather ship this as **2.0** than 1.1.0, say so — four engines were rewritten and batch compression is new, so either is defensible.
 
-These are the paths that only exist in SwiftUI or in the extension, so nothing here could be executed:
-- **Batch flow** — pick 3+ files in the Files picker, confirm the batch review screen lists them all, compress, then try "Save all as ZIP".
-- **Share extension** — share a PDF into Local File Diet from Files. It should open the app on the review screen. This is the fix I am least able to verify: `extensionContext.open` is not dependable from a share extension, so it now falls back to walking the responder chain to `UIApplication.open`.
-- **Recent files** — swipe/context-menu delete, and tapping a row to re-share. Rows whose output has been pruned by the 24-hour cache cleanup should appear dimmed and unavailable rather than failing on tap.
+## 3. Smoke-test these by hand — they could not be verified here
 
-## 3. One product decision I need from you
+- **Share extension with multiple files.** The activation rule capped every attachment type at 1, which hid the extension from the share sheet entirely for multi-select. It is now 25. Select 3 photos, then 3 PDFs, and confirm "Local File Diet" appears both times. This is inferred from Apple's documented conjunctive predicate, never observed.
+- **Cancel a video compression**, including by swiping back mid-encode, and on an audio-only `.m4a` (which always takes the preset-fallback path). This crashed the app before; the fix is proven across 1400 trials on macOS, but AVFoundation timing differs on device.
+- **Recent history surviving a relaunch.** It never worked before — the decoder never matched the encoder. Compress something, force-quit, reopen, and confirm the entry is still listed.
+- **Batch flow**: import 3+ files, compress, then "Save all as ZIP".
+- **A rotated scanned PDF with highlights on it.** Annotation geometry on `/Rotate` pages is the least-settled part of the PDF work.
 
-**How should OCRed scans behave?** A scanned PDF that has been through OCR has selectable text on every page, so the hybrid engine classifies no page as image-dominant and returns the file unchanged rather than destroying the text layer. The warning says so plainly. If you want those files to shrink, it has to become an explicit choice on the review screen — something like "these pages are photos with recognised text — shrink them and lose the text layer?". Tell me which you want and I will build it.
+## 4. Known limitations that are now stated honestly in the app, not fixed
 
-## 4. Tooling notes
+- **PDF form fields.** PDFKit will not write a document-level `/AcroForm` into a document it creates, so a form widget survives the rebuild as an annotation but stops being a fillable field. The warning says so.
+- **OCRed scans.** Every page has selectable text, so no page is classified as image-dominant and the file comes back unchanged rather than having its text layer destroyed. Still worth making an explicit user choice on the review screen — tell me if you want that.
+- **Finder-made archives.** `ditto`, and therefore the Finder's Compress, writes entries with a data descriptor, which the reader refuses. Those archives get wrapped as-is rather than re-packed; the warning now names the real reason instead of blaming encryption. Supporting them is a contained change if you want the feature.
+- **Mixed share selections.** `MaxCount` is per type (25 each) while `maximumAttachments` is a total of 25, so a selection of 15 photos plus 15 files is accepted by the share sheet and then silently truncated to 25. Low impact, but it is silent.
 
-- **Use `Scripts/add_file_to_project.rb`, not `Scripts/generate_project.rb`.** The generator rebuilds the project from nothing and had drifted from the committed one: it wiped `DEVELOPMENT_TEAM`, downgraded `objectVersion` from 54 to 46, and dropped three build settings Xcode had added (`DEAD_CODE_STRIPPING`, `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS`, `STRING_CATALOG_GENERATE_SYMBOLS`). I pinned the team ID and object version in it, but it still loses those three settings, so it is only good for scaffolding from scratch.
+## 5. App Store metadata is out of date
 
-  ```bash
-  GEM_HOME=$(ls -d ~/.gem/ruby/*/ | head -1) ruby Scripts/add_file_to_project.rb LocalFileDiet/Path/To/NewFile.swift
-  ```
+The listing predates all of this. The app can now honestly claim precise video size targeting (a target lands within about 4% in a single pass), PDF compression that keeps text selectable, and batch compression. Worth rewriting before submission.
 
-- The `xcodeproj` Ruby gem was installed with `gem install xcodeproj --user-install`, which is why the `GEM_HOME` prefix is needed.
+## Tooling
 
-## 5. App Store copy is now understated
+Use `Scripts/add_file_to_project.rb`, not `generate_project.rb` — the latter rebuilds from scratch and drops three build settings Xcode has added.
 
-`APP_STORE_CONNECT_COPY.md` predates these changes. The app can now genuinely claim precise video size targeting ("compress a video to under 10 MB" lands within about 4% in a single pass), PDF compression that keeps text selectable, and batch compression. Worth a rewrite before the next submission.
+```bash
+GEM_HOME=$(ls -d ~/.gem/ruby/*/ | head -1) ruby Scripts/add_file_to_project.rb LocalFileDiet/Path/To/New.swift
+```

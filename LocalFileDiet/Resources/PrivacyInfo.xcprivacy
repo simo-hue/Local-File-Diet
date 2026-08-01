@@ -2,6 +2,60 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Every entry below is an audit result, not a guess. App Store Connect
+	     rejects the upload at processing with ITMS-91053 for a category the
+	     binary reaches but this file omits, and asks questions about a category
+	     declared here that the binary never reaches, so both directions matter.
+	     `AppStoreSubmissionTests` re-runs the audit against the sources.
+
+	     Not declared, because nothing in the app target calls into them:
+	       SystemBootTime  - no systemUptime, mach_absolute_time or
+	                         mach_continuous_time anywhere.
+	       DiskSpace       - nothing reads free space; the size checks all read
+	                         one file's own size, never a volume's capacity.
+	       ActiveKeyboards - no activeInputModes, no UITextInputMode.
+	     The share extension is a separate binary and reaches none of the five
+	     categories, which is why it ships without a manifest of its own. -->
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<!-- Two call sites, both reading the timestamp of a file this app
+			     itself wrote into its own container:
+			       TemporaryFileStore.cleanupOlderThan24Hours reads
+			       .contentModificationDateKey on Caches/Working, Caches/Outputs
+			       and tmp/ImportStaging to sweep them;
+			       SimpleZIPWriter.write(files:) reads .modificationDate of the
+			       working copy to stamp the ZIP entry's DOS date.
+			     C617.1 is "files inside the app container, app group container
+			     or the app's CloudKit container", which is exactly that.
+			     DDA9.1 would be wrong twice over: no screen in the app shows a
+			     file timestamp, and DDA9.1 forbids the value leaving the
+			     device, while the ZIP date is written into an archive the user
+			     can then share. 3B52.1 does not apply either - the picked file
+			     is copied first and only the copy's size is read. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>C617.1</string>
+			</array>
+		</dict>
+		<dict>
+			<!-- The four @AppStorage properties in SettingsView, plus
+			     CompressionSettings.fromDefaults and
+			     TargetSelectionState.fromDefaults. All of them go through
+			     UserDefaults.standard: no suite name, no app group defaults, no
+			     managed configuration, so the values are written and read by
+			     this app alone. That is CA92.1. 1C8F.1 would be the one to use
+			     if any of this moved to a shared suite. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSPrivacyCollectedDataTypes</key>
 	<array/>
 	<key>NSPrivacyTracking</key>

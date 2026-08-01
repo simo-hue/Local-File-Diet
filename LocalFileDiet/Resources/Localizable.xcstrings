@@ -1,61 +1,29 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@ → %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ → %2$@"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ → %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ → %2$@"
           }
         }
       }
     },
-    "%@%%" : {
-
-    },
-    "Compress images, PDFs, and videos to the size you need." : {
-
-    },
-    "Compressing locally" : {
-
-    },
-    "Current target: %@" : {
-
-    },
-    "Estimate will appear here before compression." : {
-
-    },
-    "Everything stays on your iPhone. Originals are never changed." : {
-
-    },
-    "Local File Diet is a paid app. After download, every compression feature is available without accounts, trials, subscriptions, or in-app purchases." : {
-
-    },
-    "Notes" : {
-
-    },
-    "Output" : {
-
-    },
-    "PDF, image, video, or ZIP" : {
-
-    },
-    "Plan" : {
-
-    },
-    "Quality" : {
-
-    },
-    "Recent" : {
-
-    },
-    "Target size" : {
-
-    },
-    "The app stores only local compression history metadata. File names and paths are not logged." : {
-
-    }
+    "%@%%": {},
+    "Compress images, PDFs, and videos to the size you need.": {},
+    "Compressing locally": {},
+    "Current target: %@": {},
+    "Estimate will appear here before compression.": {},
+    "Local File Diet is a paid app. After download, every compression feature is available without accounts, trials, subscriptions, or in-app purchases.": {},
+    "Notes": {},
+    "Output": {},
+    "PDF, image, video, or ZIP": {},
+    "Plan": {},
+    "Quality": {},
+    "Recent": {},
+    "Target size": {}
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

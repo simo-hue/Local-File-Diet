@@ -30,8 +30,18 @@ struct SettingsView: View {
                 Section("Privacy") {
                     Label("No account", systemImage: "person.crop.circle.badge.xmark")
                     Label("No uploads", systemImage: "icloud.slash")
-                    Label("Files stay on your iPhone", systemImage: "iphone")
-                    Text("The app stores only local compression history metadata. File names and paths are not logged.")
+                    // "Files stay on your iPhone" full stop was more than the app
+                    // delivers: every result screen offers a share sheet. The
+                    // qualifier matches what privacy.html already says.
+                    Label("Files stay on your iPhone unless you share them", systemImage: "iphone")
+                    // This used to say file names and paths were not logged, which
+                    // the app itself disproves: `HistoryStore` writes both to
+                    // Application Support and the home screen shows the names back.
+                    // The copy now describes what is actually written, including
+                    // the part a reader would otherwise miss - an output is named
+                    // "<original name>-compressed-<id>.<ext>", so keeping output
+                    // names means keeping the originals' names too.
+                    Text("Recent history stays on this iPhone. The last 25 compressions are kept with the output file's name, where it sits in the app's own storage, the file type, the sizes before and after, and the date. Output names are built from your original file names, so those are kept too. Clear, next to Recent on the home screen, erases the list; Clear temporary files below deletes the files it points at.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

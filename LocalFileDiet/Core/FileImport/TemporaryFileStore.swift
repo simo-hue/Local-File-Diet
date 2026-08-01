@@ -76,6 +76,20 @@ actor TemporaryFileStore: TemporaryFileStoring {
                 try fileManager.removeItem(at: directory)
             }
         }
+        clearSharedInbox()
+    }
+
+    /// Settings says "Temporary files cleared", so it has to mean all of them.
+    /// Files handed over by the share extension live in the app group container,
+    /// not in this app's own caches, and were being left behind - a full copy of
+    /// whatever the user shared, sitting there after they asked for it to go.
+    private func clearSharedInbox() {
+        guard let container = fileManager.containerURL(
+            forSecurityApplicationGroupIdentifier: AppGroup.identifier
+        ) else { return }
+        let incoming = container.appendingPathComponent("Incoming", isDirectory: true)
+        guard fileManager.fileExists(atPath: incoming.path) else { return }
+        try? fileManager.removeItem(at: incoming)
     }
 
     private func directory(named name: String, under parent: URL) throws -> URL {

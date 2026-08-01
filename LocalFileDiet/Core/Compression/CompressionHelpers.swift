@@ -68,15 +68,24 @@ enum OutputGuard {
         return (keptURL, true)
     }
 
-    /// Warning bookkeeping for a kept-original outcome: flag it, and drop a
-    /// "target may be unrealistic" caution only when the original really does
-    /// satisfy the target.
+    /// Warning bookkeeping for a kept-original outcome.
+    ///
+    /// The user is receiving a byte-for-byte copy of the file they started with,
+    /// so every warning that described what the engine did to it has to go
+    /// first. Nothing was rebuilt, re-encoded or re-packed, so nothing about a
+    /// rebuild, a re-encode or a re-pack may be reported — see
+    /// `CompressionWarning.describesDiscardedWork` for the audited list. Leaving
+    /// them in is how a result screen ends up saying "form fields stop being
+    /// fillable" next to "Original kept", about a form that still works.
+    ///
+    /// Then flag the kept original, and drop a "target may be unrealistic"
+    /// caution only when the original really does satisfy the target.
     static func warningsAfterKeepingOriginal(
         _ warnings: [CompressionWarning],
         finalSize: Int64,
         target: Int64?
     ) -> [CompressionWarning] {
-        var updated = warnings
+        var updated = warnings.filter { !$0.describesDiscardedWork }
         if CompressionMath.targetReached(size: finalSize, target: target) {
             updated.removeAll { $0.id == CompressionWarning.targetMayBeUnrealistic.id }
         }

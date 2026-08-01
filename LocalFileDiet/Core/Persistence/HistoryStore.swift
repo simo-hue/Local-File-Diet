@@ -34,6 +34,7 @@ final class HistoryStore: @unchecked Sendable {
         let directory = applicationSupport.appendingPathComponent("LocalFileDiet", isDirectory: true)
         try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
         self.fileURL = directory.appendingPathComponent("history.json")
+        excludeFromBackup(directory)
         load()
     }
 
@@ -61,12 +62,32 @@ final class HistoryStore: @unchecked Sendable {
 
     private func load() {
         guard let data = try? Data(contentsOf: fileURL) else { return }
-        items = (try? JSONDecoder().decode([CompressionHistoryItem].self, from: data)) ?? []
+        do {
+            // `save()` writes ISO-8601 dates, so the decoder has to match. A plain
+            // `JSONDecoder()` expects `.deferredToDate` and threw on `createdAt`
+            // every single time, which `?? []` then swallowed - Recent came back
+            // empty after every relaunch and the next `add()` overwrote the file.
+            items = try JSONDecoder.app.decode([CompressionHistoryItem].self, from: data)
+        } catch {
+            AppLogger.importFlow.error("history_load_failed \(String(describing: error), privacy: .public)")
+            items = []
+        }
     }
 
     private func save() {
         guard let data = try? JSONEncoder.pretty.encode(items) else { return }
         try? data.write(to: fileURL, options: [.atomic])
+        excludeFromBackup(fileURL)
+    }
+
+    /// Recent history is a local convenience, not something to sync. Keeping it out
+    /// of iCloud backups is what makes the Settings copy ("stays on this iPhone")
+    /// literally true rather than merely usually true.
+    private func excludeFromBackup(_ url: URL) {
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var mutableURL = url
+        try? mutableURL.setResourceValues(values)
     }
 }
 

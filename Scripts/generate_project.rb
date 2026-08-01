@@ -89,8 +89,8 @@ end
     settings["SUPPORTED_PLATFORMS"] = "iphoneos iphonesimulator"
     settings["CODE_SIGN_STYLE"] = "Automatic"
     settings["DEVELOPMENT_TEAM"] = DEVELOPMENT_TEAM
-    settings["MARKETING_VERSION"] = "1.0"
-    settings["CURRENT_PROJECT_VERSION"] = "1"
+    settings["MARKETING_VERSION"] = "1.1.0"
+    settings["CURRENT_PROJECT_VERSION"] = "2"
     settings["ENABLE_USER_SCRIPT_SANDBOXING"] = "YES"
   end
 end

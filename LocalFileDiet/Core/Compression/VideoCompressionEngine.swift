@@ -134,7 +134,7 @@ struct VideoCompressionEngine: CompressionEngine {
             .appendingPathComponent("Video-\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: workDirectory, withIntermediateDirectories: true)
         // Covers success, failure and cancellation: no partial encode survives.
-        defer { try? fileManager.removeItem(at: workDirectory) }
+        defer { Self.removeScratchDirectory(at: workDirectory, fileManager: fileManager) }
 
         // A source that cannot even be inspected still deserves an attempt: it
         // goes down the same fallback road as a source that fails mid-encode.
@@ -149,15 +149,17 @@ struct VideoCompressionEngine: CompressionEngine {
             )
         } ?? Self.blindPlan(settings: settings)
 
-        var warnings: [CompressionWarning] = [.videoPrecision]
-        if plan.codec == .hevc, source != nil {
-            warnings.append(.videoModernCodec)
-        }
+        // The warnings are collected as the run goes rather than seeded up
+        // front, because which of them are TRUE depends on which path runs.
+        // `videoPrecision` promises a bitrate worked out from the target, and
+        // `videoModernCodec` promises HEVC; the preset fallback below delivers
+        // neither, so a run that ends there must not carry either claim.
+        var warnings: [CompressionWarning] = []
 
         let candidateURL: URL
         do {
             guard let source else { throw AppError.unsupportedFileType }
-            candidateURL = try await encode(
+            candidateURL = try await encodeWithAudioRetry(
                 asset: asset,
                 source: source,
                 plan: &plan,
@@ -169,6 +171,10 @@ struct VideoCompressionEngine: CompressionEngine {
                 progress: progress
             )
             let display = Self.displaySize(width: plan.width, height: plan.height, transform: source.transform)
+            warnings.append(.videoPrecision)
+            if plan.codec == .hevc {
+                warnings.append(.videoModernCodec)
+            }
             warnings.append(
                 .videoOutputPlan(width: display.width, height: display.height, codec: plan.codec.displayName)
             )
@@ -192,6 +198,12 @@ struct VideoCompressionEngine: CompressionEngine {
             warnings.append(.videoPresetFallback)
         }
 
+        // The encode is the only part that watches for cancellation from the
+        // inside. Copying the result out and verifying it is quick, but it is
+        // still work nobody asked for once Cancel has been tapped — and it
+        // would otherwise leave a finished file in the outputs directory.
+        try Task.checkCancellation()
+
         if fileManager.fileExists(atPath: outputURL.path) {
             try? fileManager.removeItem(at: outputURL)
         }
@@ -211,6 +223,90 @@ struct VideoCompressionEngine: CompressionEngine {
         )
     }
 
+    /// How long the scratch-directory removal keeps trying, and how often.
+    private static let scratchRemovalAttempts = 20
+    private static let scratchRemovalInterval = Duration.milliseconds(50)
+
+    /// Deletes the encode's scratch directory, and keeps trying for a second if
+    /// the first attempt is refused.
+    ///
+    /// A cancelled preset export hands control back before AVFoundation has
+    /// finished with the `<name>.sb-xxxxxxxx` exchange file it writes beside its
+    /// own output, and `removeItem` on a directory that still holds one fails
+    /// with EPERM. Nothing ever looks in that directory again, so a single
+    /// attempt leaves it in the temporary folder for good — measured at 6 strays
+    /// in 800 cancels. Retrying off to one side costs the caller nothing and
+    /// clears every one of them.
+    private static func removeScratchDirectory(at url: URL, fileManager: FileManager) {
+        if (try? fileManager.removeItem(at: url)) != nil { return }
+        let path = url.path
+        Task.detached(priority: .utility) {
+            // A `FileManager` of its own: the caller's belongs to the caller's
+            // task, and one is not safe to share across them.
+            let manager = FileManager()
+            for _ in 0..<scratchRemovalAttempts {
+                try? await Task.sleep(for: scratchRemovalInterval)
+                guard manager.fileExists(atPath: path) else { return }
+                if (try? manager.removeItem(atPath: path)) != nil { return }
+            }
+        }
+    }
+
+    /// Belt and braces around the audio encoder.
+    ///
+    /// `Self.audioBitrate(planned:sampleRate:channels:)` clamps the plan's audio
+    /// budget to the ceiling this encoder was measured to accept, so the first
+    /// attempt should be the only one. But `canApply` demonstrably does not
+    /// predict acceptance — it says yes to settings the encoder then rejects at
+    /// the first append with -11861 — and the fallback for a rejected setting is
+    /// a preset export that ignores the user's target completely. One more
+    /// attempt at half the audio budget is a much smaller loss than that, so it
+    /// is worth taking before giving up on the pipeline.
+    private func encodeWithAudioRetry(
+        asset: AVURLAsset,
+        source: SourceDescription,
+        plan: inout VideoEncodingPlan,
+        target: Int64?,
+        resolutionPreset: VideoResolutionPreset,
+        workDirectory: URL,
+        outputExtension: String,
+        fileType: AVFileType,
+        progress: @escaping @Sendable (CompressionProgress) -> Void
+    ) async throws -> URL {
+        do {
+            return try await encode(
+                asset: asset,
+                source: source,
+                plan: &plan,
+                target: target,
+                resolutionPreset: resolutionPreset,
+                workDirectory: workDirectory,
+                outputExtension: outputExtension,
+                fileType: fileType,
+                audioBitrateScale: 1,
+                progress: progress
+            )
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            // Only an audio track can be the audio encoder's fault.
+            guard source.audioTrack != nil, plan.audioBitrate > 0 else { throw error }
+            try Task.checkCancellation()
+            return try await encode(
+                asset: asset,
+                source: source,
+                plan: &plan,
+                target: target,
+                resolutionPreset: resolutionPreset,
+                workDirectory: workDirectory,
+                outputExtension: outputExtension,
+                fileType: fileType,
+                audioBitrateScale: 0.5,
+                progress: progress
+            )
+        }
+    }
+
     /// Runs pass one, and pass two when pass one overshot. Updates `plan` to
     /// whichever plan produced the file it returns, so the warnings describe
     /// what was actually written.
@@ -223,6 +319,7 @@ struct VideoCompressionEngine: CompressionEngine {
         workDirectory: URL,
         outputExtension: String,
         fileType: AVFileType,
+        audioBitrateScale: Double,
         progress: @escaping @Sendable (CompressionProgress) -> Void
     ) async throws -> URL {
         let firstURL = workDirectory.appendingPathComponent("pass-1.\(outputExtension)")
@@ -233,6 +330,7 @@ struct VideoCompressionEngine: CompressionEngine {
             outputURL: firstURL,
             fileType: fileType,
             range: Self.firstPassRange,
+            audioBitrateScale: audioBitrateScale,
             progress: progress
         )
         let firstSize = fileManager.fileSize(at: firstURL)
@@ -262,6 +360,7 @@ struct VideoCompressionEngine: CompressionEngine {
             outputURL: secondURL,
             fileType: fileType,
             range: Self.secondPassRange,
+            audioBitrateScale: audioBitrateScale,
             progress: progress
         )
         let secondSize = fileManager.fileSize(at: secondURL)
@@ -287,6 +386,7 @@ struct VideoCompressionEngine: CompressionEngine {
         outputURL: URL,
         fileType: AVFileType,
         range: ClosedRange<Double>,
+        audioBitrateScale: Double,
         progress: @escaping @Sendable (CompressionProgress) -> Void
     ) async throws {
         if fileManager.fileExists(atPath: outputURL.path) {
@@ -322,7 +422,12 @@ struct VideoCompressionEngine: CompressionEngine {
 
         var audioOutput: AVAssetReaderTrackOutput?
         var audioInput: AVAssetWriterInput?
-        if let audioTrack = source.audioTrack, plan.audioBitrate > 0 {
+        let audioBitrate = Self.audioBitrate(
+            planned: plan.audioBitrate * audioBitrateScale,
+            sampleRate: source.audioSampleRate,
+            channels: source.audioChannels
+        )
+        if let audioTrack = source.audioTrack, audioBitrate > 0 {
             let output = AVAssetReaderTrackOutput(
                 track: audioTrack,
                 outputSettings: [
@@ -338,7 +443,7 @@ struct VideoCompressionEngine: CompressionEngine {
                 AVFormatIDKey: kAudioFormatMPEG4AAC,
                 AVSampleRateKey: source.audioSampleRate,
                 AVNumberOfChannelsKey: source.audioChannels,
-                AVEncoderBitRateKey: Int(plan.audioBitrate.rounded())
+                AVEncoderBitRateKey: audioBitrate
             ]
             if reader.canAdd(output), writer.canApply(outputSettings: settings, forMediaType: .audio) {
                 let input = AVAssetWriterInput(mediaType: .audio, outputSettings: settings)
@@ -410,6 +515,9 @@ struct VideoCompressionEngine: CompressionEngine {
         // for one preset at a time with the current API instead.
         var chosen: String?
         for candidate in candidates {
+            // Each probe is a real round-trip into AVFoundation, and there can
+            // be four of them before a single frame is exported.
+            try Task.checkCancellation()
             let compatible = await AVAssetExportSession.compatibility(
                 ofExportPreset: candidate,
                 with: asset,
@@ -433,28 +541,38 @@ struct VideoCompressionEngine: CompressionEngine {
             message: "Exporting video"
         ))
 
-        try await withTaskCancellationHandler {
-            if #available(iOS 18, macOS 15, *) {
-                try await box.exportModern(to: outputURL, as: fileType) { fraction in
-                    progress(CompressionProgress(
-                        phase: .encoding,
-                        fractionCompleted: Self.firstPassRange.lowerBound
-                            + (Self.secondPassRange.upperBound - Self.firstPassRange.lowerBound) * fraction,
-                        message: "Exporting video"
-                    ))
+        do {
+            try await withTaskCancellationHandler {
+                if #available(iOS 18, macOS 15, *) {
+                    try await box.exportModern(to: outputURL, as: fileType) { fraction in
+                        progress(CompressionProgress(
+                            phase: .encoding,
+                            fractionCompleted: Self.firstPassRange.lowerBound
+                                + (Self.secondPassRange.upperBound - Self.firstPassRange.lowerBound) * fraction,
+                            message: "Exporting video"
+                        ))
+                    }
+                } else {
+                    try await box.exportLegacy(to: outputURL, as: fileType) { fraction in
+                        progress(CompressionProgress(
+                            phase: .encoding,
+                            fractionCompleted: Self.firstPassRange.lowerBound
+                                + (Self.secondPassRange.upperBound - Self.firstPassRange.lowerBound) * fraction,
+                            message: "Exporting video"
+                        ))
+                    }
                 }
-            } else {
-                try await box.exportLegacy(to: outputURL, as: fileType) { fraction in
-                    progress(CompressionProgress(
-                        phase: .encoding,
-                        fractionCompleted: Self.firstPassRange.lowerBound
-                            + (Self.secondPassRange.upperBound - Self.firstPassRange.lowerBound) * fraction,
-                        message: "Exporting video"
-                    ))
-                }
+            } onCancel: {
+                box.cancel()
             }
-        } onCancel: {
-            box.cancel()
+        } catch {
+            // A cancelled `export(to:as:)` throws before the session has finished
+            // winding down, and the caller deletes this directory the moment
+            // this call returns. Deleting it while AVFoundation is still writing
+            // into it leaves a half-removed directory behind — measured at 6
+            // strays in 800 cancels before this wait went in.
+            await box.waitUntilStopped()
+            throw error
         }
     }
 
@@ -499,6 +617,38 @@ struct VideoCompressionEngine: CompressionEngine {
     }
 
     // MARK: - Settings
+
+    /// The AAC bitrates this encoder was measured to accept, largest first.
+    /// Everything the planner asks for (64/96/128 kbps) is on it, so a source
+    /// that can carry the plan gets the plan unchanged.
+    static let audioBitrateLadder = [128_000, 96_000, 64_000, 48_000, 32_000, 24_000, 16_000]
+
+    /// The audio bitrate to actually ask for, which is NOT always the one the
+    /// plan budgeted.
+    ///
+    /// AAC has a hard ceiling that depends on the source's sample rate and
+    /// channel count, and `AVAssetWriter.canApply(outputSettings:forMediaType:)`
+    /// does not know about it: it returns true for settings the encoder then
+    /// refuses at the first append with -11861, which throws the whole
+    /// bitrate-accurate pipeline away for a preset export that ignores the
+    /// target. Swept on this encoder, one channel at a time, the highest bitrate
+    /// a real append accepts is the largest standard AAC step at or below three
+    /// bits per sample per channel: 8 kHz mono stops at 24 kbps, 11.025 and
+    /// 12 kHz at 32, 16 kHz at 48, 22.05 and 24 kHz at 64, 32 kHz at 96. Stereo
+    /// doubles each of those. Only 44.1 and 48 kHz carry all three of the
+    /// planner's budgets untouched.
+    static func audioBitrate(planned: Double, sampleRate: Double, channels: Int) -> Int {
+        guard planned > 0, sampleRate > 0 else { return 0 }
+        let ceiling = 3 * sampleRate * Double(max(channels, 1))
+        let capped = min(planned, ceiling)
+        guard capped > 0 else { return 0 }
+        // Landing between two steps is what fails: 22.05 kHz mono accepts
+        // 64 kbps and refuses the 66.15 kbps that three-bits-per-sample allows.
+        if let step = audioBitrateLadder.first(where: { Double($0) <= capped }) {
+            return step
+        }
+        return Int(capped.rounded())
+    }
 
     /// Some encoders reject a profile level, and invalid writer settings raise
     /// an Objective-C exception rather than throwing, so every dictionary is run
@@ -676,8 +826,9 @@ private struct SourceDescription {
 /// `AVAssetReader` and `AVAssetWriter` are not `Sendable`, and
 /// `requestMediaDataWhenReady(on:using:)` hands work to a plain dispatch queue,
 /// so the whole pair is confined to this box. Everything mutable behind it is
-/// guarded by one lock, and the only things that cross out of it are a `Double`
-/// progress fraction and the final `Result`.
+/// guarded by `lock`, and the only things that cross out of it are a `Double`
+/// progress fraction and the final `Result`. A second lock, `startLock`, keeps
+/// the start sequence and the teardown from interleaving — see `cancel`.
 private final class TranscodePipeline: @unchecked Sendable {
     private let reader: AVAssetReader
     private let writer: AVAssetWriter
@@ -690,15 +841,28 @@ private final class TranscodePipeline: @unchecked Sendable {
     private let minimumFrameInterval: Double
     private let report: @Sendable (Double) -> Void
 
-    private let videoQueue = DispatchQueue(label: "com.localfilediet.video.encode.video")
-    private let audioQueue = DispatchQueue(label: "com.localfilediet.video.encode.audio")
+    /// ONE serial queue for both sample pumps, and for the teardown.
+    ///
+    /// A queue each would encode very slightly faster, and would also let
+    /// `tearDown` run while the other pump was mid-`copyNextSampleBuffer` or
+    /// mid-`append`. Apple's headers forbid exactly that: `AVAssetReader.h` says
+    /// `cancelReading` "should not be called concurrently with
+    /// -[AVAssetReaderOutput copyNextSampleBuffer]", and `AVAssetWriter.h` says
+    /// the same of `cancelWriting` and `-[AVAssetWriterInput appendSampleBuffer:]`.
+    /// This is a non-realtime encode; the throughput is not worth the race.
+    private let sampleQueue = DispatchQueue(label: "com.localfilediet.video.encode")
 
     private let lock = NSLock()
+    /// Held for the whole of `begin` and taken again by `tearDown`, so a cancel
+    /// can never land in the middle of starting the reader and the writer.
+    private let startLock = NSLock()
     private var pendingInputs: Int
     private var continuation: CheckedContinuation<Void, Error>?
     private var settled: Result<Void, Error>?
     private var didSettle = false
     private var isCancelled = false
+    /// True once the reader and writer are live and therefore need tearing down.
+    private var didStart = false
     private var lastKeptSeconds = -Double.greatestFiniteMagnitude
     private var lastReportedFraction: Double = 0
 
@@ -740,14 +904,25 @@ private final class TranscodePipeline: @unchecked Sendable {
 
     private func begin(_ continuation: CheckedContinuation<Void, Error>) {
         guard attach(continuation) else { return }
+        startLock.lock()
+        let failure = start()
+        startLock.unlock()
+        // Resuming a continuation while holding a lock is how deadlocks happen,
+        // so `settle` is deliberately outside the critical section.
+        if let failure { settle(.failure(failure)) }
+    }
+
+    /// The start sequence, run with `startLock` held so that `tearDown` cannot
+    /// interleave with it. Returns the error to settle with, or nil once the
+    /// sample pumps own the work and will settle it themselves.
+    private func start() -> Error? {
+        guard markStarted() else { return CancellationError() }
         guard writer.startWriting() else {
-            settle(.failure(writer.error ?? AppError.exportFailed))
-            return
+            return writer.error ?? AppError.exportFailed
         }
         guard reader.startReading() else {
             writer.cancelWriting()
-            settle(.failure(reader.error ?? AppError.exportFailed))
-            return
+            return reader.error ?? AppError.exportFailed
         }
         writer.startSession(atSourceTime: .zero)
 
@@ -755,12 +930,34 @@ private final class TranscodePipeline: @unchecked Sendable {
         if audioInput != nil, audioOutput != nil {
             pump(isVideo: false)
         }
+        return nil
     }
 
-    /// Cancellation arrives from the task, not from the media queues, so it is
-    /// recorded as a flag that the sample loops check. `cancelReading` and
-    /// `cancelWriting` make `copyNextSampleBuffer` return nil promptly so the
-    /// loops wind down even if they are mid-append.
+    /// Records that the reader and writer are about to go live, unless a cancel
+    /// got there first. Called with `startLock` held, which is what keeps the
+    /// answer true for as long as `start` needs it.
+    private func markStarted() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard !isCancelled else { return false }
+        didStart = true
+        return true
+    }
+
+    /// Cancellation arrives from the task, on whichever thread tapped Cancel —
+    /// in this app always the main actor. Two things follow from that.
+    ///
+    /// Nothing may touch the reader before `begin` has started it.
+    /// `AVAssetReader.startReading()` RAISES an Objective-C exception, which
+    /// Swift cannot catch, when the reader was cancelled a moment earlier. So a
+    /// cancel that arrives first is only a flag — `markStarted` then declines to
+    /// start anything — and tearing a live pair down waits on `startLock`, which
+    /// `begin` holds for its whole start sequence.
+    ///
+    /// And the teardown runs on `sampleQueue` rather than here: `cancelWriting`
+    /// can take hundreds of milliseconds, which is not something to spend on the
+    /// main thread, and that queue is where BOTH sample pumps run, so hopping
+    /// onto it is what actually serialises the teardown against them.
     private func cancel() {
         lock.lock()
         if isCancelled {
@@ -768,13 +965,31 @@ private final class TranscodePipeline: @unchecked Sendable {
             return
         }
         isCancelled = true
+        let started = didStart
         lock.unlock()
 
+        if started {
+            sampleQueue.async { [self] in tearDown() }
+        }
+        // Settled here rather than after the teardown, so the awaiting task
+        // stops now instead of waiting on AVFoundation. `settle` is a no-op for
+        // whichever path gets there second.
+        settle(.failure(CancellationError()))
+    }
+
+    /// Stops a reader/writer pair that `begin` really did start. `cancelReading`
+    /// and `cancelWriting` make `copyNextSampleBuffer` return nil and `append`
+    /// fail promptly, so the sample loops wind down on their next turn.
+    ///
+    /// Runs on `sampleQueue`, so neither pump can be inside the reader or the
+    /// writer while this is happening.
+    private func tearDown() {
+        startLock.lock()
+        defer { startLock.unlock() }
         reader.cancelReading()
         if writer.status == .writing {
             writer.cancelWriting()
         }
-        settle(.failure(CancellationError()))
     }
 
     private var cancellationRequested: Bool {
@@ -790,7 +1005,10 @@ private final class TranscodePipeline: @unchecked Sendable {
             continuation.resume(with: settled)
             return false
         }
-        if didSettle {
+        // `isCancelled` without a settled result yet means `cancel` is running
+        // right now: refuse the continuation here and let it resume this one
+        // failure, rather than register it a moment too late.
+        if didSettle || isCancelled {
             lock.unlock()
             continuation.resume(throwing: CancellationError())
             return false
@@ -821,9 +1039,8 @@ private final class TranscodePipeline: @unchecked Sendable {
     /// the thing that vouches for them.
     private func pump(isVideo: Bool) {
         let input = isVideo ? videoInput : audioInput
-        let queue = isVideo ? videoQueue : audioQueue
         guard let input else { return }
-        input.requestMediaDataWhenReady(on: queue) { [self] in
+        input.requestMediaDataWhenReady(on: sampleQueue) { [self] in
             guard let input = isVideo ? videoInput : audioInput,
                   let output = isVideo ? videoOutput : audioOutput else { return }
             while input.isReadyForMoreMediaData {
@@ -920,43 +1137,102 @@ private final class TranscodePipeline: @unchecked Sendable {
 
 // MARK: - Export session box (fallback path only)
 
+/// Owns the one export session the fallback path uses, and the handshake that
+/// keeps a cancel from killing the process.
+///
+/// `cancelExport()` looks harmless and is not. On a session whose export has not
+/// begun, it leaves AVFoundation believing the export already happened, and the
+/// next thing to set the output URL — which is the first thing an export does —
+/// raises `NSInternalInconsistencyException`: "Cannot alter output URL attribute
+/// on an AVAssetExportSession after an export has started." Swift cannot catch
+/// an Objective-C exception, so the app is gone. Two different cancels land
+/// there: `withTaskCancellationHandler` runs `onCancel` BEFORE the operation
+/// when the task was already cancelled as the handler went in, and a cancel a
+/// moment later can still arrive while the export is only just being handed
+/// over. Measured on the unfixed engine with an audio-only .m4a — which always
+/// takes this path — 32 aborts in 400 cancels, every one of them 4-6 ms in.
+///
+/// So a cancel is a flag first and an action second. It acts only on a session
+/// that `markStarted` really did hand an export to AND that reports
+/// `.exporting`, which is the state that says the output URL is already set and
+/// therefore that nothing is left to raise. That state arrives about a third of
+/// a millisecond after the export is handed over (measured, both branches, which
+/// never pass through `.waiting` at all), and `stopAttemptDelays` covers the
+/// sliver before it.
 private final class ExportSessionBox: @unchecked Sendable {
+    /// When to try stopping the session, measured from the cancel. The first
+    /// attempt is the one that almost always works; the rest exist for the
+    /// sliver in which the session has been handed an export but does not yet
+    /// admit to `.exporting`, when stopping it would be fatal.
+    private static let stopAttemptDelays: [DispatchTimeInterval] = [
+        .milliseconds(5), .milliseconds(50), .milliseconds(250)
+    ]
+
+    /// How `waitUntilStopped` waits: often enough that the usual few
+    /// milliseconds are not rounded up into something the user would feel, and
+    /// bounded so a session that never settles cannot wedge a cancel.
+    private static let stopWaitInterval = Duration.milliseconds(2)
+    private static let stopWaitLimit = Duration.seconds(2)
+
     private let session: AVAssetExportSession
+
+    private let lock = NSLock()
+    /// Held across the whole of the legacy start sequence — output URL, file
+    /// type, `exportAsynchronously` — and across every `cancelExport()`, so the
+    /// two can never interleave.
+    private let startLock = NSLock()
+    /// `cancelExport()` is not instant and the thread that taps Cancel is the
+    /// main actor, so the stopping happens here instead.
+    private let stopQueue = DispatchQueue(label: "com.localfilediet.video.export.cancel")
+    private var isCancelled = false
+    /// True once the session has been handed an export, and therefore the only
+    /// state in which cancelling it means anything.
+    private var didStart = false
+    private var didStop = false
 
     init(session: AVAssetExportSession) {
         self.session = session
     }
 
+    private var hasStarted: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return didStart
+    }
+
+    /// Records that the session is about to be handed an export, unless a
+    /// cancel got there first. Returns false when it did, and the caller must
+    /// then leave the session alone.
+    private func markStarted() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard !isCancelled else { return false }
+        didStart = true
+        return true
+    }
+
+    /// iOS 18 and up. `export(to:as:)` sets the output URL itself, which is
+    /// exactly what a too-early `cancelExport()` turns into a raise, so this is
+    /// the branch the handshake exists for.
+    ///
+    /// Progress comes from `pollProgress` rather than from
+    /// `states(updateInterval:)`. That stream is the natural partner for this
+    /// API and it is not safe here: when the export ends because the task was
+    /// cancelled rather than because `cancelExport()` was called, its iterator
+    /// takes the process down. Measured with the stream in place: 5 SIGTRAPs
+    /// inside `AVAssetExportSession.ProgressStates.Iterator.next()`, plus one
+    /// run that never finished at all, in 1300 cancels. The poller reads the
+    /// same fraction off the session and cannot do that.
     @available(iOS 18, macOS 15, *)
     func exportModern(
         to outputURL: URL,
         as fileType: AVFileType,
         progress: @escaping @Sendable (Double) -> Void
     ) async throws {
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask { [self] in
-                try await runModernExport(to: outputURL, as: fileType)
-            }
-            group.addTask { [self] in
-                await observeModernStates(progress)
-            }
-            try await group.waitForAll()
-        }
-    }
-
-    @available(iOS 18, macOS 15, *)
-    private func runModernExport(to outputURL: URL, as fileType: AVFileType) async throws {
+        guard markStarted() else { throw CancellationError() }
+        let poller = pollProgress(progress)
+        defer { poller.cancel() }
         try await session.export(to: outputURL, as: fileType)
-    }
-
-    @available(iOS 18, macOS 15, *)
-    private func observeModernStates(_ progress: @escaping @Sendable (Double) -> Void) async {
-        for await state in session.states(updateInterval: 0.25) {
-            if Task.isCancelled { return }
-            if case .exporting(let sessionProgress) = state {
-                progress(sessionProgress.fractionCompleted)
-            }
-        }
     }
 
     /// iOS 17 path. `status`, `progress` and `exportAsynchronously` are all
@@ -967,28 +1243,51 @@ private final class ExportSessionBox: @unchecked Sendable {
         as fileType: AVFileType,
         progress: @escaping @Sendable (Double) -> Void
     ) async throws {
-        session.outputURL = outputURL
-        session.outputFileType = fileType
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            let poller = Task { [self] in
-                while isRunning {
-                    progress(legacyProgress)
-                    try? await Task.sleep(for: .milliseconds(250))
-                }
+            // Setting the URL, setting the file type and starting the export are
+            // one indivisible step as far as a cancel is concerned: a
+            // `cancelExport()` in the middle of them poisons the session and the
+            // next assignment raises.
+            startLock.lock()
+            guard markStarted() else {
+                startLock.unlock()
+                continuation.resume(throwing: CancellationError())
+                return
             }
+            session.outputURL = outputURL
+            session.outputFileType = fileType
+            let poller = pollProgress(progress)
             startLegacyExport { [self] in
                 poller.cancel()
                 continuation.resume(with: legacyOutcome)
             }
+            startLock.unlock()
         }
     }
 
-    private var isRunning: Bool {
-        session.status == .waiting || session.status == .exporting
-    }
-
-    private var legacyProgress: Double {
-        Double(session.progress)
+    /// Reports the export's progress, and gives a cancel that landed too early
+    /// somewhere to land again.
+    ///
+    /// Detached on purpose. A cancel that arrives before the session admits to
+    /// `.exporting` cannot be acted on at the time, and the task that owns this
+    /// export is by then cancelled too — so the loop that has to try again has
+    /// to be one that cancellation does not touch. It ends when the export ends,
+    /// or when the caller cancels it.
+    private func pollProgress(_ progress: @escaping @Sendable (Double) -> Void) -> Task<Void, Never> {
+        Task.detached { [self] in
+            while !Task.isCancelled {
+                stopSessionIfExporting()
+                switch session.status {
+                case .waiting, .exporting:
+                    progress(Double(session.progress))
+                case .unknown:
+                    break // Handed over, but not started yet.
+                default:
+                    return // Finished, failed or stopped: there is nothing left to report.
+                }
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
     }
 
     private var legacyOutcome: Result<Void, Error> {
@@ -1005,6 +1304,60 @@ private final class ExportSessionBox: @unchecked Sendable {
     }
 
     func cancel() {
+        lock.lock()
+        if isCancelled {
+            lock.unlock()
+            return
+        }
+        isCancelled = true
+        let started = didStart
+        lock.unlock()
+
+        // Nothing has been started: the flag is the whole of the answer, and
+        // `markStarted` will now refuse to start anything.
+        guard started else { return }
+        stopQueue.async { [self] in stopSessionIfExporting() }
+        for delay in Self.stopAttemptDelays {
+            stopQueue.asyncAfter(deadline: .now() + delay) { [self] in stopSessionIfExporting() }
+        }
+    }
+
+    /// Waits until the session has stopped writing, trying to stop it as it
+    /// goes. Returns at once for a session that was never started, and gives up
+    /// after `stopWaitLimit` rather than waiting on AVFoundation forever.
+    func waitUntilStopped() async {
+        guard hasStarted else { return }
+        // Detached because the task calling this has just been cancelled, and a
+        // cancelled task cannot sleep — it would spin instead of waiting.
+        await Task.detached { [self] in
+            var waited = Duration.zero
+            while waited < Self.stopWaitLimit {
+                stopSessionIfExporting()
+                switch session.status {
+                case .unknown, .waiting, .exporting:
+                    try? await Task.sleep(for: Self.stopWaitInterval)
+                    waited += Self.stopWaitInterval
+                default:
+                    return
+                }
+            }
+        }.value
+    }
+
+    /// Stops the session, but only once stopping it is safe — see the note on
+    /// this class. Idempotent, and a no-op on a session that has already
+    /// finished, failed or been stopped, so it can be called as often as
+    /// anything likes.
+    private func stopSessionIfExporting() {
+        startLock.lock()
+        defer { startLock.unlock() }
+        lock.lock()
+        let wanted = isCancelled && didStart && !didStop
+        lock.unlock()
+        guard wanted, session.status == .exporting else { return }
+        lock.lock()
+        didStop = true
+        lock.unlock()
         session.cancelExport()
     }
 }

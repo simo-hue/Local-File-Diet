@@ -81,7 +81,10 @@ struct HomeView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text("Everything stays on your iPhone. Originals are never changed.")
+            // Kept in step with the Settings > Privacy wording. The unqualified
+            // "everything stays on your iPhone" was more than the app delivers,
+            // because every result screen offers a share sheet.
+            Text("Compression happens on your iPhone, and nothing is uploaded. Originals are never changed.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

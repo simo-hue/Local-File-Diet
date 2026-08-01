@@ -24,16 +24,21 @@
 		<string>com.apple.share-services</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
+		<!-- NSExtensionActivationRule must stay nested inside NSExtensionAttributes;
+		     hoisting it to the top of NSExtension is what caused App Store error 90360.
+		     The MaxCount numbers below are a hard gate, not a hint: the share sheet
+		     hides this extension entirely once a selection exceeds them, so they must
+		     stay equal to ShareViewController.maximumAttachments. -->
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
-				<integer>1</integer>
+				<integer>25</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-				<integer>1</integer>
+				<integer>25</integer>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-				<integer>1</integer>
+				<integer>25</integer>
 			</dict>
 		</dict>
 	</dict>

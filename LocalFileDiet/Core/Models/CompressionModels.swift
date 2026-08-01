@@ -226,29 +226,64 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
         message: "This file may not get much smaller without visible quality loss."
     )
 
+    /// Shown both before a run and after one that missed, so it cannot be
+    /// written in the future tense — "we will try the target" is plainly wrong
+    /// on a result screen that is already reporting the size it landed on.
     static let targetMayBeUnrealistic = CompressionWarning(
         id: "targetMayBeUnrealistic",
         severity: .caution,
         title: "Target may be too small",
-        message: "We will try the target, but quality may need to drop noticeably."
+        message: "This file may not fit the target. Quality may have to drop noticeably, and the result can still end up over it."
     )
+
+    /// What a page rebuild carries across, and the exact words are what the
+    /// engine was measured doing.
+    ///
+    /// Harness fixture, 2,027,151 bytes: a photo page marked `/Rotate 90`, an
+    /// upright photo page as its control and a text page, carrying between them
+    /// three links, two sticky notes, three highlights with `/QuadPoints`, two
+    /// ink strokes with `/InkList`, two stamps with their own `/AP` appearance
+    /// streams, a form widget and a three-entry outline. In the 494,467-byte
+    /// output every one of those came back with the same `/Rect`, the same
+    /// `/QuadPoints`, the same `/InkList` and the same appearance box and drawing
+    /// operators as the source — on the rotated page as well as the upright ones
+    /// — and all three bookmarks still pointed at the right pages. (PDFKit
+    /// re-emits an `/AP` stream with its own clip and colour-space names around
+    /// the same operators; the artwork is identical, the bytes around it are
+    /// not.) Form fields are the one exception and carry their own warning.
+    static let interactiveContentPromise =
+        "links, notes, highlights, marks and bookmarks are carried over on every page"
 
     static let rasterizesPDF = CompressionWarning(
         id: "rasterizesPDF",
         severity: .caution,
         title: "Photo pages will be rebuilt",
-        message: "Pages that are mostly photo or scan get rebuilt as images. Text pages keep their selectable text, but links and annotations on rebuilt pages may be lost."
+        message: "Pages that are mostly photo or scan get rebuilt as images. The other pages keep their selectable text, and \(Self.interactiveContentPromise)."
     )
 
     /// The same warning, told in terms of how much of the document it touches.
     /// Only the photo pages are rebuilt, so "12 of 200 pages" is a very
     /// different promise from "your PDF will become pictures".
-    static func pdfPagesRebuilt(imageDominantPages: Int, of pageCount: Int) -> CompressionWarning {
-        CompressionWarning(
+    ///
+    /// - Parameter interactiveContentCarried: whether the pass that puts the
+    ///   links and bookmarks back actually ran. When it did not, the sentence
+    ///   promising them is dropped rather than left contradicting
+    ///   `pdfInteractiveContentLost` two lines further down the same screen.
+    static func pdfPagesRebuilt(
+        imageDominantPages: Int,
+        of pageCount: Int,
+        interactiveContentCarried: Bool = true
+    ) -> CompressionWarning {
+        let scope = "\(imageDominantPages) of \(pageCount) page\(pageCount == 1 ? "" : "s") "
+            + "are mostly photo or scan and will be rebuilt as images. "
+            + "The other pages keep their selectable text"
+        return CompressionWarning(
             id: rasterizesPDF.id,
             severity: .caution,
             title: rasterizesPDF.title,
-            message: "\(imageDominantPages) of \(pageCount) page\(pageCount == 1 ? "" : "s") are mostly photo or scan and will be rebuilt as images. The other pages keep their selectable text, but links and annotations on rebuilt pages may be lost."
+            message: interactiveContentCarried
+                ? "\(scope), and \(Self.interactiveContentPromise)."
+                : "\(scope)."
         )
     }
 
@@ -257,14 +292,19 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
     /// `imagesUnderText` covers the scanned-and-then-OCRed document: it does hold
     /// big pictures, but every one of them sits under searchable text, and saying
     /// "no photos inside" would be a lie.
+    ///
+    /// What the engine actually established is that no page passed the
+    /// image-dominant test, which is a statement about the pages that hold
+    /// pictures — not proof that a page with no picture on it carries text. The
+    /// wording says only the first.
     static func pdfTextOnly(smallestFileRequested: Bool, imagesUnderText: Bool = false) -> CompressionWarning {
         let message: String
         if imagesUnderText {
-            message = "Every page in this PDF has selectable text on it, including the pages with pictures. The only way to shrink those pages is to rebuild them as images, which would throw the text away, so your original file was kept unchanged."
+            message = "The pages with pictures in this PDF have selectable text on them as well. The only way to shrink those pages is to rebuild them as images, which would throw that text away, so your original file was kept unchanged."
         } else if smallestFileRequested {
-            message = "This PDF is text and drawings, with no photos or scans inside. Smallest file would have to turn every page into a picture, which throws away the selectable text and often makes the file bigger, so your original was kept unchanged."
+            message = "Smallest file would have to turn every page into a picture, which throws away the selectable text and often makes the file bigger. No page in this PDF can be re-compressed without doing that, so your original was kept unchanged."
         } else {
-            message = "This PDF is text and drawings, with no photos or scans inside. There is nothing to re-compress without destroying the text, so your original file was kept unchanged."
+            message = "No page in this PDF can be re-compressed without throwing away its text or drawings, so your original file was kept unchanged."
         }
         return CompressionWarning(
             id: "pdfTextOnly",
@@ -274,11 +314,36 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
         )
     }
 
-    static let pdfAnnotations = CompressionWarning(
-        id: "pdfAnnotations",
+    /// The one thing a rebuild cannot hand back whole.
+    ///
+    /// Measured: the widget arrives with its field name and its current answer
+    /// intact, but the document-level `/AcroForm` does not — PDFKit will not
+    /// write one into a document it created and does not synthesise one from the
+    /// widgets. By the PDF specification that entry is what makes a file an
+    /// interactive form at all, so the box is there and readable and no longer
+    /// something a viewer offers to fill in.
+    static let pdfFormFields = CompressionWarning(
+        id: "pdfFormFields",
         severity: .caution,
-        title: "PDF has annotations",
-        message: "Interactive annotations or forms may not survive a page rebuild."
+        title: "Form fields stop being fillable",
+        message: "This PDF has fill-in form fields. The boxes and anything already typed into them are kept, but the rebuilt file is no longer a form, so those boxes cannot be filled in again."
+    )
+
+    /// The rebuild worked but the second pass that puts the links and bookmarks
+    /// back did not. Rare, and it contradicts what `pdfPagesRebuilt` promised,
+    /// so that promise is dropped and this is said out loud instead. The list
+    /// has to name form boxes too: the same pass carries them, and losing it
+    /// loses the widget entirely rather than just its fillability.
+    ///
+    /// It must not go on to say the text survived. This warning always appears
+    /// beside `pdfPagesRebuilt`, which already says which pages were turned into
+    /// images and that the rest kept their text — and a rebuilt page under the
+    /// 100-character threshold does lose the few characters it had.
+    static let pdfInteractiveContentLost = CompressionWarning(
+        id: "pdfInteractiveContentLost",
+        severity: .caution,
+        title: "Links and marks could not be kept",
+        message: "The smaller file was made, but putting this PDF's links, notes, highlights, marks, form boxes and bookmarks back into it afterwards failed, so it does not have them."
     )
 
     static let heicCompatibility = CompressionWarning(
@@ -320,13 +385,15 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
         message: "This video could not be re-encoded at a chosen bitrate, so a built-in Apple preset was used instead. The file is still smaller, but its size is approximate rather than aimed at your target."
     )
 
-    /// Genuinely useful before pressing go: "will export at 1280x720, H.264".
+    /// Genuinely useful before pressing go, and equally useful afterwards — the
+    /// engine adds it in both places, so it is worded without a tense rather
+    /// than promising a future export on a screen reporting a finished one.
     static func videoOutputPlan(width: Int, height: Int, codec: String) -> CompressionWarning {
         CompressionWarning(
             id: "videoOutputPlan",
             severity: .info,
-            title: "Will export at \(width)x\(height)",
-            message: "This video will be re-encoded at \(width)x\(height) using \(codec)."
+            title: "\(width)x\(height), \(codec)",
+            message: "This video is re-encoded at \(width)x\(height) using \(codec)."
         )
     }
 
@@ -336,6 +403,46 @@ struct CompressionWarning: Codable, Identifiable, Sendable, Hashable {
         title: "Modern video format",
         message: "HEVC needs about half the bitrate of H.264 for the same picture, but some older computers, websites and phones cannot play it. Turn off \"Prefer smaller modern format\" if the file has to work everywhere."
     )
+
+    // MARK: - Warnings that stop being true when the original is kept
+
+    /// Whether this warning describes work the engine did to the file, rather
+    /// than something about the file itself.
+    ///
+    /// `OutputGuard` can decide at the very end that the rebuilt, re-encoded or
+    /// re-packed candidate is not smaller and hand the user their untouched
+    /// original instead. Everything that described that discarded work is then a
+    /// statement about a file nobody receives — "form fields stop being
+    /// fillable" printed next to "Original kept", about an invoice whose form
+    /// still works perfectly. Those warnings are withdrawn.
+    ///
+    /// Warnings that describe the INPUT (`alreadyOptimized`, `pdfTextOnly`,
+    /// `zipAlreadyCompressed`) or the OUTCOME (`targetMayBeUnrealistic`) are not
+    /// in the list: they are still true, and they are usually the reason nothing
+    /// got smaller.
+    var describesDiscardedWork: Bool { Self.discardedWorkIDs.contains(id) }
+
+    private static let discardedWorkIDs: Set<String> = [
+        // PDF: the page rebuild and everything it did or failed to do.
+        // `pdfPagesRebuilt` shares `rasterizesPDF`'s id.
+        rasterizesPDF.id,
+        pdfFormFields.id,
+        pdfInteractiveContentLost.id,
+        // Image: both describe the encode that was thrown away. A kept original
+        // is not HEIC and still has its transparency.
+        heicCompatibility.id,
+        transparencyFlattened.id,
+        // Video: all four describe an export that was thrown away.
+        videoPrecision.id,
+        videoPresetFallback.id,
+        videoModernCodec.id,
+        "videoOutputPlan",
+        // Archive: both describe a ZIP that was thrown away. Named by id rather
+        // than by symbol because they live beside the archive engine, and this
+        // list should not stop compiling if that file reorganises them.
+        "zipRepacked",
+        "zipCouldNotRepack"
+    ]
 }
 
 struct CompressionOperation: Codable, Identifiable, Sendable, Hashable {

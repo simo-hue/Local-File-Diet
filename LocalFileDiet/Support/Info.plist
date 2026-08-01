@@ -29,6 +29,12 @@
 			</array>
 		</dict>
 	</array>
+	<!-- The app contains no cryptography of its own: no CryptoKit, no
+	     CommonCrypto, no Security framework, and no network traffic at all.
+	     Declaring this up front stops App Store Connect asking the export
+	     compliance question on every upload. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>

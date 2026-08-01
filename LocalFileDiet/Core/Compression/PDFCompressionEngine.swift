@@ -24,7 +24,16 @@ struct PDFPageProfile: Sendable, Hashable, Codable {
     let imageBytes: Int64
     /// Sum of width x height of those images.
     let imagePixels: Int64
-    let hasAnnotations: Bool
+    /// How many annotations hang off the page. A count rather than a flag
+    /// because the restore pass's byte cost tracks it almost exactly — see
+    /// `PDFCompressionEngine.interactiveContentReserve`.
+    let annotationCount: Int
+    /// A fill-in form field sits on this page. Tracked separately from
+    /// `annotationCount` because it is the one kind of interactive content the
+    /// rebuild cannot hand back whole.
+    let hasFormFields: Bool
+
+    var hasAnnotations: Bool { annotationCount > 0 }
 }
 
 /// A sampled read of a document, cheap enough to run while the user is looking
@@ -37,6 +46,7 @@ struct PDFAnalysis: Sendable, Hashable, Codable {
     let pageCount: Int
     let extractedTextCharacters: Int
     let hasAnnotations: Bool
+    let hasFormFields: Bool
     let sampledPages: [PDFPageProfile]
     /// Bytes of the whole file, carried so the estimate can split image bytes
     /// from everything else.
@@ -134,6 +144,7 @@ struct PDFAnalyzer {
                 pageCount: 0,
                 extractedTextCharacters: 0,
                 hasAnnotations: false,
+                hasFormFields: false,
                 sampledPages: [],
                 fileSizeBytes: fileSize
             )
@@ -146,6 +157,7 @@ struct PDFAnalyzer {
             pageCount: pageCount,
             extractedTextCharacters: profiles.reduce(0) { $0 + $1.textCharacters },
             hasAnnotations: profiles.contains { $0.hasAnnotations },
+            hasFormFields: profiles.contains { $0.hasFormFields },
             sampledPages: profiles,
             fileSizeBytes: fileSize
         )
@@ -167,6 +179,7 @@ struct PDFAnalyzer {
     private func profile(document: PDFDocument, index: Int, averagePageShare: Double) -> PDFPageProfile? {
         guard let page = document.page(at: index) else { return nil }
         let text = page.string?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
+        let annotations = page.annotations
         let images = Self.imageStats(page: document.documentRef?.page(at: index + 1))
         let bounds = page.bounds(for: .mediaBox)
         let areaPoints = max(Double(bounds.width) * Double(bounds.height), 1)
@@ -183,7 +196,8 @@ struct PDFAnalyzer {
             textCharacters: text,
             imageBytes: images.bytes,
             imagePixels: images.pixels,
-            hasAnnotations: !page.annotations.isEmpty
+            annotationCount: annotations.count,
+            hasFormFields: annotations.contains { $0.type == "Widget" }
         )
     }
 
@@ -293,7 +307,11 @@ fileprivate final class PDFImageScan {
 ///
 /// This one classifies each page and makes one output pass: photo pages are
 /// re-encoded as JPEGs at a measured resolution, and every other page is copied
-/// across with its text, vectors and links intact.
+/// across with its text and vectors intact.
+///
+/// That pass copies content streams and nothing else, so links, notes,
+/// highlights and the outline would all be gone from the output — on every page.
+/// `PDFInteractiveContent.restore` puts them back on the winning pass.
 struct PDFCompressionEngine: CompressionEngine {
     /// Full render passes allowed after the one-page probe. Probe + 3 passes
     /// means no page is ever rendered more than four times, against the old
@@ -361,8 +379,8 @@ struct PDFCompressionEngine: CompressionEngine {
         if settings.stripMetadata {
             operations.insert(.stripMetadata, at: 0)
         }
-        if analysis.hasAnnotations {
-            warnings.append(.pdfAnnotations)
+        if analysis.hasFormFields {
+            warnings.append(.pdfFormFields)
         }
 
         let imageBytes = analysis.estimatedImageBytes
@@ -451,15 +469,9 @@ struct PDFCompressionEngine: CompressionEngine {
             throw AppError.corruptFile
         }
 
-        var warnings: [CompressionWarning] = [
-            .pdfPagesRebuilt(imageDominantPages: imageDominant.count, of: profiles.count)
-        ]
         var operations: [CompressionOperation] = [.pdfRasterRebuild, .reencode, .verifyOutput]
         if settings.stripMetadata {
             operations.insert(.stripMetadata, at: 0)
-        }
-        if profiles.contains(where: \.hasAnnotations) {
-            warnings.append(.pdfAnnotations)
         }
 
         let documentInfo = outputDocumentInfo(document: document, settings: settings)
@@ -468,11 +480,22 @@ struct PDFCompressionEngine: CompressionEngine {
         try fileManager.createDirectory(at: workDirectory, withIntermediateDirectories: true)
         defer { try? fileManager.removeItem(at: workDirectory) }
 
-        let bestURL = try searchForBestPass(
+        // The restore pass below adds bytes AFTER the search has stopped, so the
+        // search has to aim under the user's target by that much or a file that
+        // just squeaked in comes back out over the line.
+        let reserve = settings.targetSizeBytes.map {
+            Self.interactiveContentReserve(
+                profiles: profiles,
+                hasOutline: document.outlineRoot != nil,
+                target: $0
+            )
+        } ?? 0
+        let best = try searchForBestPass(
             cgDocument: cgDocument,
             profiles: profiles,
             imageDominant: imageDominant,
             settings: settings,
+            target: settings.targetSizeBytes.map { max($0 - reserve, 1) },
             sourceSize: sourceSize,
             documentInfo: documentInfo,
             workDirectory: workDirectory,
@@ -483,7 +506,33 @@ struct PDFCompressionEngine: CompressionEngine {
         if fileManager.fileExists(atPath: outputURL.path) {
             try? fileManager.removeItem(at: outputURL)
         }
-        try fileManager.copyItem(at: bestURL, to: outputURL)
+        try fileManager.copyItem(at: best.url, to: outputURL)
+
+        // The passes wrote content streams; the links, notes, highlights and
+        // bookmarks that live outside them come back here, once, on the file
+        // that actually won.
+        try Task.checkCancellation()
+        let restored = try PDFInteractiveContent.restore(
+            into: outputURL,
+            from: input.workingURL,
+            pages: best.pages,
+            stagingDirectory: workDirectory,
+            fileManager: fileManager
+        )
+        // What the rebuild warning is allowed to promise depends on whether that
+        // pass worked, so the warning is not written until it has.
+        var warnings: [CompressionWarning] = [
+            .pdfPagesRebuilt(
+                imageDominantPages: imageDominant.count,
+                of: profiles.count,
+                interactiveContentCarried: !restored.failed
+            )
+        ]
+        if restored.failed {
+            warnings.append(.pdfInteractiveContentLost)
+        } else if restored.carriedFormFields {
+            warnings.append(.pdfFormFields)
+        }
 
         try Task.checkCancellation()
         if let target = settings.targetSizeBytes, fileManager.fileSize(at: outputURL) > target {
@@ -510,21 +559,26 @@ struct PDFCompressionEngine: CompressionEngine {
     /// unreachable. This renders ONE page to learn the document's real bytes per
     /// page, picks a starting DPI from that measurement, and then adjusts by the
     /// measured ratio — stopping the moment the target is met.
+    ///
+    /// `target` is the size the passes have to hit, which is the user's target
+    /// less whatever `PDFInteractiveContent.restore` is going to add on top
+    /// afterwards — see `interactiveContentReserve`.
     private func searchForBestPass(
         cgDocument: CGPDFDocument,
         profiles: [PDFPageProfile],
         imageDominant: [PDFPageProfile],
         settings: CompressionSettings,
+        target: Int64?,
         sourceSize: Int64,
         documentInfo: [CFString: Any],
         workDirectory: URL,
         progress: @escaping @Sendable (CompressionProgress) -> Void
-    ) throws -> URL {
+    ) throws -> (url: URL, pages: [PDFInteractiveContent.PageLink]) {
         var raster = Self.nominalRaster(for: settings.qualityMode)
         // Bytes the passes cannot touch: text pages, fonts, the file structure.
         let fixedBytes = max(sourceSize - imageDominant.reduce(Int64(0)) { $0 + $1.imageBytes }, 0)
 
-        if let target = settings.targetSizeBytes {
+        if let target {
             progress(CompressionProgress(
                 phase: .analyzing,
                 fractionCompleted: 0.12,
@@ -541,14 +595,17 @@ struct PDFCompressionEngine: CompressionEngine {
             }
         }
 
-        let passLimit = settings.targetSizeBytes == nil ? 1 : Self.maximumRenderPasses
+        let passLimit = target == nil ? 1 : Self.maximumRenderPasses
         let span = 0.72 / Double(passLimit)
         var best: (url: URL, size: Int64)?
+        // Which source page each output page came from. Every pass writes the
+        // same pages in the same order, so the last map describes them all.
+        var pages: [PDFInteractiveContent.PageLink] = []
 
         for pass in 0..<passLimit {
             try Task.checkCancellation()
             let passURL = workDirectory.appendingPathComponent("pass-\(pass).pdf")
-            try renderDocument(
+            pages = try renderDocument(
                 to: passURL,
                 cgDocument: cgDocument,
                 profiles: profiles,
@@ -564,7 +621,7 @@ struct PDFCompressionEngine: CompressionEngine {
                 best = (passURL, size)
             }
 
-            guard let target = settings.targetSizeBytes, size > target else { break }
+            guard let target, size > target else { break }
             guard pass + 1 < passLimit else { break }
             guard let next = Self.adjusted(
                 raster,
@@ -580,7 +637,7 @@ struct PDFCompressionEngine: CompressionEngine {
         }
 
         guard let best else { throw AppError.exportFailed }
-        return best.url
+        return (best.url, pages)
     }
 
     /// Renders a single representative page to learn what a page really costs,
@@ -601,7 +658,9 @@ struct PDFCompressionEngine: CompressionEngine {
         }
 
         let nominal = Self.nominalRaster(for: settings.qualityMode)
-        let geometry = PageGeometry(page: page)
+        // Same geometry the real pass will use for this page, so the probe
+        // measures the bitmap that will actually be encoded.
+        let geometry = PageGeometry(page: page, bakingRotation: !representative.hasAnnotations)
         let probeBytes = try autoreleasepool { () -> Int in
             let bitmap = try renderBitmap(page: page, geometry: geometry, dpi: nominal.dpi)
             return try PDFImageEncoder.jpegData(bitmap, quality: nominal.quality).count
@@ -681,7 +740,13 @@ struct PDFCompressionEngine: CompressionEngine {
     ///
     /// Photo pages become JPEGs; every other page is replayed into the new file
     /// with `drawPDFPage`, which copies its content stream — text stays text,
-    /// vectors stay vectors, and the page costs nothing to "compress".
+    /// vectors stay vectors, and the page costs nothing to "compress". Nothing
+    /// outside the content stream comes with it, which is what
+    /// `PDFInteractiveContent.restore` is for.
+    ///
+    /// - Returns: one entry per page written, in order. A page Core Graphics
+    ///   cannot open is skipped, so on a damaged file the output is shorter than
+    ///   the source and the two no longer line up by index.
     private func renderDocument(
         to url: URL,
         cgDocument: CGPDFDocument,
@@ -691,18 +756,19 @@ struct PDFCompressionEngine: CompressionEngine {
         progressBase: Double,
         progressSpan: Double,
         progress: @escaping @Sendable (CompressionProgress) -> Void
-    ) throws {
+    ) throws -> [PDFInteractiveContent.PageLink] {
         let writer = try PDFPageWriter(url: url, documentInfo: documentInfo)
         let pageCount = max(profiles.count, 1)
+        var pages: [PDFInteractiveContent.PageLink] = []
 
         for (position, profile) in profiles.enumerated() {
             try Task.checkCancellation()
-            try autoreleasepool {
-                guard let page = cgDocument.page(at: profile.pageIndex + 1) else { return }
-                let geometry = PageGeometry(page: page)
+            let written = try autoreleasepool { () -> PDFInteractiveContent.PageLink? in
+                guard let page = cgDocument.page(at: profile.pageIndex + 1) else { return nil }
+                let geometry = PageGeometry(page: page, bakingRotation: !profile.hasAnnotations)
                 switch profile.kind {
                 case .textual:
-                    writer.writePage(mediaBox: geometry.outputBox) { context in
+                    writer.writePage(mediaBox: geometry.outputBox, rotation: geometry.outputRotation) { context in
                         context.concatenate(geometry.transform)
                         context.drawPDFPage(page)
                     }
@@ -710,11 +776,19 @@ struct PDFCompressionEngine: CompressionEngine {
                     // The bitmap dies inside `rasterizedImage`; only the small
                     // JPEG-backed image survives to the draw call.
                     let image = try rasterizedImage(page: page, geometry: geometry, raster: raster)
-                    writer.writePage(mediaBox: geometry.outputBox) { context in
+                    writer.writePage(mediaBox: geometry.outputBox, rotation: geometry.outputRotation) { context in
                         context.interpolationQuality = .high
                         context.draw(image, in: geometry.outputBox)
                     }
                 }
+                return PDFInteractiveContent.PageLink(
+                    sourcePageIndex: profile.pageIndex,
+                    transform: geometry.transform,
+                    sourceRotation: geometry.outputRotation
+                )
+            }
+            if let written {
+                pages.append(written)
             }
             progress(CompressionProgress(
                 phase: profile.kind == .imageDominant ? .encoding : .writing,
@@ -726,6 +800,7 @@ struct PDFCompressionEngine: CompressionEngine {
         }
 
         writer.finish()
+        return pages
     }
 
     private func rasterizedImage(page: CGPDFPage, geometry: PageGeometry, raster: RasterSettings) throws -> CGImage {
@@ -911,6 +986,48 @@ struct PDFCompressionEngine: CompressionEngine {
     /// The best the raster path can ever do, used to spot an impossible target.
     private static let floorImageRatio = 0.08
 
+    // MARK: Restore reserve
+    //
+    // `PDFInteractiveContent.restore` runs after `searchForBestPass` has stopped,
+    // so every byte it adds lands on top of a size the search already accepted.
+    //
+    // Measured by running the engine twice over the same fixtures, once with the
+    // restore pass and once without, at no target so both builds render exactly
+    // one identical pass. The cost is a straight line in the number of
+    // annotations and does not move with the document: one photo page whose
+    // render is 747,145 bytes cost 839 / 7,074 / 35,091 / 140,669 / 354,251 bytes
+    // for 1, 10, 50, 200 and 500 plain highlights — about 703 bytes each.
+    // Annotations that need a richer appearance stream (ink, a stamp with its own
+    // `/AP`, a sticky note and the popup PDFKit adds for it) cost 11,492 /
+    // 43,189 / 162,647 bytes for 10, 50 and 200 — a 3.4 KB fixed part plus about
+    // 800 bytes each. The three-page fixture with 13 annotations and an outline
+    // cost exactly 20,243 bytes at 2,027,151 and at 2,083,975 bytes of source,
+    // i.e. the same bytes for two different documents. PDFKit writing an
+    // appearance stream for every annotation that arrives without one is where
+    // the bytes go.
+    //
+    // Left unbudgeted this is a real miss, not a rounding error. Sweeping targets
+    // over a page carrying 211 highlights, three of seven came out over the line
+    // — 400,000 -> 405,231, 425,000 -> 461,205 and 525,000 -> 546,437 — each one
+    // a file the search believed it had landed. With the reserve all seven fit.
+    //
+    // The base covers the fixed part (shared colour spaces, graphics states, the
+    // rewritten catalog) and 1 KB an annotation sits above the measured slope for
+    // both annotation families. The share cap stops a document carrying thousands
+    // of annotations from driving the render to the floor DPI chasing a reserve
+    // bigger than the picture budget.
+    private static let restoreBaseBytes: Int64 = 8_192
+    private static let restoreBytesPerAnnotation: Int64 = 1_024
+    private static let maximumRestoreReserveShare = 0.25
+
+    /// Bytes held back from the target for the interactive-content pass.
+    static func interactiveContentReserve(profiles: [PDFPageProfile], hasOutline: Bool, target: Int64) -> Int64 {
+        let annotations = profiles.reduce(0) { $0 + $1.annotationCount }
+        guard annotations > 0 || hasOutline else { return 0 }
+        let raw = restoreBaseBytes + Int64(annotations) * restoreBytesPerAnnotation
+        return min(raw, Int64(Double(max(target, 0)) * maximumRestoreReserveShare))
+    }
+
     /// Whether a document with no rebuildable page nonetheless carries real
     /// pictures — the shape of a scan that was later OCRed, where every photo
     /// sits under a layer of searchable text.
@@ -951,14 +1068,33 @@ struct RasterSettings: Sendable, Hashable {
 
 /// Where a source page has to be drawn, and how big the output page must be.
 ///
-/// `getDrawingTransform` is doing the real work: it maps the page's box into the
-/// output rectangle and applies the page's own `/Rotate`, so landscape scans and
-/// pages with a non-zero box origin come out the right way up.
+/// There are two ways to deal with a page that carries `/Rotate`, and which one
+/// is right depends on whether the page has annotations.
+///
+/// * **Baked** (`bakingRotation: true`, the default). `getDrawingTransform`
+///   turns the content upright and the output page is the turned size, so a
+///   landscape scan reads correctly in any viewer with no `/Rotate` at all.
+/// * **Kept** (`bakingRotation: false`). The output page is the crop box's own
+///   size, the transform is a plain translation, and the page carries the
+///   source's `/Rotate` instead.
+///
+/// Annotated pages have to use the second one. `restore` can only move an
+/// annotation by setting `PDFAnnotation.bounds`, and PDFKit does not carry the
+/// rest of the annotation with it: measured on the harness fixture, a highlight
+/// on a `/Rotate 90` page got a correctly rotated `/Rect` of [656 295 676 539]
+/// but `/QuadPoints` of [656 315 900 315 656 295 900 295] — a yellow band whose
+/// right edge is at x=900 on an 842-point-wide page. An ink stroke's `/InkList`
+/// kept its x values while its rectangle moved, and a stamp's own `/AP` stream
+/// was re-squashed from a 150x100 box into a 100x150 one. Under a translation
+/// all three land exactly where they started.
 struct PageGeometry {
     let outputBox: CGRect
     let transform: CGAffineTransform
+    /// The `/Rotate` the output page must carry. Zero whenever the rotation was
+    /// baked into the content instead.
+    let outputRotation: Int
 
-    init(page: CGPDFPage) {
+    init(page: CGPDFPage, bakingRotation: Bool = true) {
         var box = page.getBoxRect(.cropBox)
         if box.isEmpty || box.isNull || box.isInfinite {
             box = page.getBoxRect(.mediaBox)
@@ -967,14 +1103,25 @@ struct PageGeometry {
             box = CGRect(x: 0, y: 0, width: 612, height: 792)
         }
         let rotation = ((Int(page.rotationAngle) % 360) + 360) % 360
-        let size = (rotation == 90 || rotation == 270)
+        let quarterTurn = rotation == 90 || rotation == 270
+        let size = (bakingRotation && quarterTurn)
             ? CGSize(width: box.height, height: box.width)
             : box.size
         outputBox = CGRect(
             origin: .zero,
             size: CGSize(width: max(size.width, 1), height: max(size.height, 1))
         )
-        transform = page.getDrawingTransform(.cropBox, rect: outputBox, rotate: 0, preserveAspectRatio: true)
+        if bakingRotation {
+            transform = page.getDrawingTransform(.cropBox, rect: outputBox, rotate: 0, preserveAspectRatio: true)
+            outputRotation = 0
+        } else {
+            // Crop box to output box and nothing else. For the overwhelmingly
+            // common box at the origin this is the identity, which is exactly
+            // what `getDrawingTransform` returns for an unrotated page — so an
+            // annotated page with no `/Rotate` is written exactly as before.
+            transform = CGAffineTransform(translationX: -box.minX, y: -box.minY)
+            outputRotation = rotation
+        }
     }
 }
 

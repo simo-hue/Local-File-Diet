@@ -38,11 +38,13 @@
 		9F2BD3800DD6AB51D1934372 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
 		9F6AAA6A0D064C84F11F3776 /* ImageCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC85AFCDEA50A0FA5F32E9 /* ImageCompressionEngine.swift */; };
 		A218F6C3AF43C8A21C7FBB5A /* FileImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9107BF3BE4ABBEF0AEFB6 /* FileImportService.swift */; };
+		A8A5FF23FB7B11CC29C1CEA7 /* PDFInteractiveContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2B45900033303B4309FD06 /* PDFInteractiveContentTests.swift */; };
 		A8F46A4FE57F2A2FC183BEEF /* ArchiveCompressionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17789C534565AD7B0BDA77C5 /* ArchiveCompressionEngineTests.swift */; };
 		A961AB508AE4893091758B08 /* ArchiveCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB2CC2C1F673B1289BE71C0 /* ArchiveCompressionEngine.swift */; };
 		B424EDF686C7B3CEEF55670F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 647FAE6EA199583FCCE0A6A4 /* Assets.xcassets */; };
 		B59A7573C6D60BE777148390 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E33DD60013F5E55338A8A6 /* Foundation.framework */; };
 		BD6A22D01F7064BFA8757250 /* FilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD9BE9E750829A2E5B8F9F1 /* FilePreviewView.swift */; };
+		BDC93F2219F96AAA3F3310B2 /* AppStoreSubmissionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666DB5605F7DD83DA3457508 /* AppStoreSubmissionTests.swift */; };
 		BE17A050DD8DC41C9B057AE8 /* BatchArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C37DDF2520DB35BA5F4C98F /* BatchArchive.swift */; };
 		C010AC2C6D0629FD5C3194CB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979B4644137A2729D01ED54F /* ShareViewController.swift */; };
 		C60F19190FF241F393283EBD /* VideoEncodingPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298329961569FCEB355028DF /* VideoEncodingPlan.swift */; };
@@ -66,6 +68,7 @@
 		FB3B25C827054E762D314F95 /* VideoCompressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB821949E57EC9633D4B920 /* VideoCompressionEngine.swift */; };
 		FE30BE54BEC8BE314D73F2B7 /* FileReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485FEBB0F128CBCA120D940 /* FileReviewView.swift */; };
 		FE961308CBC9FB1A0528B409 /* TargetSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D8567218B38C0409C951A /* TargetSelectionTests.swift */; };
+		FFD276E731933782C5E659C4 /* VideoCancellationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC9D57C0688A005D6E5F0A3 /* VideoCancellationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +125,7 @@
 		28ADC9F02D6B7D660271C82A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = LocalFileDiet/Resources/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		298329961569FCEB355028DF /* VideoEncodingPlan.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoEncodingPlan.swift; path = LocalFileDiet/Core/Compression/VideoEncodingPlan.swift; sourceTree = "<group>"; };
 		2C735DF38DEA448824F316DD /* LocalFileDietApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalFileDietApp.swift; path = LocalFileDiet/App/LocalFileDietApp.swift; sourceTree = "<group>"; };
+		2E2B45900033303B4309FD06 /* PDFInteractiveContentTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFInteractiveContentTests.swift; path = LocalFileDietTests/PDFInteractiveContentTests.swift; sourceTree = "<group>"; };
 		308C496E09D27558C33161A0 /* CompressionProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionProgressView.swift; path = LocalFileDiet/Features/CompressionProgress/CompressionProgressView.swift; sourceTree = "<group>"; };
 		32C43AC70BE38F34AF26DD7F /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = LocalFileDiet/Resources/Localizable.xcstrings; sourceTree = "<group>"; };
 		33D5A7F5A71280747109E5C2 /* LocalFileDietUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalFileDietUITests.swift; path = LocalFileDietUITests/LocalFileDietUITests.swift; sourceTree = "<group>"; };
@@ -140,6 +144,7 @@
 		5FDC85AFCDEA50A0FA5F32E9 /* ImageCompressionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionEngine.swift; path = LocalFileDiet/Core/Compression/ImageCompressionEngine.swift; sourceTree = "<group>"; };
 		62FACC8993A4D702E8FF3C0C /* CompressionSettingsSections.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionSettingsSections.swift; path = LocalFileDiet/Features/Shared/CompressionSettingsSections.swift; sourceTree = "<group>"; };
 		647FAE6EA199583FCCE0A6A4 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = LocalFileDiet/Resources/Assets.xcassets; sourceTree = "<group>"; };
+		666DB5605F7DD83DA3457508 /* AppStoreSubmissionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppStoreSubmissionTests.swift; path = LocalFileDietTests/AppStoreSubmissionTests.swift; sourceTree = "<group>"; };
 		66816BEC7F2D14C2D8007951 /* TargetSelection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TargetSelection.swift; path = LocalFileDiet/Core/Models/TargetSelection.swift; sourceTree = "<group>"; };
 		69A9107BF3BE4ABBEF0AEFB6 /* FileImportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileImportService.swift; path = LocalFileDiet/Core/FileImport/FileImportService.swift; sourceTree = "<group>"; };
 		69C136263B012BB0812841B2 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = LocalFileDiet/Features/Settings/SettingsView.swift; sourceTree = "<group>"; };
@@ -155,6 +160,7 @@
 		979B4644137A2729D01ED54F /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = LocalFileDietShareExtension/ShareViewController.swift; sourceTree = "<group>"; };
 		99953C922C60FBC3F73060B0 /* DocumentExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentExporter.swift; path = LocalFileDiet/Core/FileExport/DocumentExporter.swift; sourceTree = "<group>"; };
 		99D33C9BB2C065BCBD9A5FE0 /* TemporaryFileStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TemporaryFileStore.swift; path = LocalFileDiet/Core/FileImport/TemporaryFileStore.swift; sourceTree = "<group>"; };
+		9BC9D57C0688A005D6E5F0A3 /* VideoCancellationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoCancellationTests.swift; path = LocalFileDietTests/VideoCancellationTests.swift; sourceTree = "<group>"; };
 		A74F5A6780149F143325CD06 /* PDFCompressionEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDFCompressionEngineTests.swift; path = LocalFileDietTests/PDFCompressionEngineTests.swift; sourceTree = "<group>"; };
 		B324323A207E4ABBD4DA95C1 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = LocalFileDietShareExtension/Info.plist; sourceTree = "<group>"; };
 		BEC2D51A34FA7E768ECC4F81 /* CompressionHelpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompressionHelpers.swift; path = LocalFileDiet/Core/Compression/CompressionHelpers.swift; sourceTree = "<group>"; };
@@ -400,6 +406,9 @@
 				CDC3571826FDA3F1578DAA92 /* VideoEncodingPlanTests.swift */,
 				F0981E9F3FA35ED7C25BC865 /* BatchRunnerTests.swift */,
 				562D8567218B38C0409C951A /* TargetSelectionTests.swift */,
+				9BC9D57C0688A005D6E5F0A3 /* VideoCancellationTests.swift */,
+				2E2B45900033303B4309FD06 /* PDFInteractiveContentTests.swift */,
+				666DB5605F7DD83DA3457508 /* AppStoreSubmissionTests.swift */,
 			);
 			name = LocalFileDietTests;
 			sourceTree = "<group>";
@@ -713,6 +722,9 @@
 				5E819A8B55890EC007C6B2D8 /* VideoEncodingPlanTests.swift in Sources */,
 				1EBB69DD7B746D71C2D683D7 /* BatchRunnerTests.swift in Sources */,
 				FE961308CBC9FB1A0528B409 /* TargetSelectionTests.swift in Sources */,
+				FFD276E731933782C5E659C4 /* VideoCancellationTests.swift in Sources */,
+				A8A5FF23FB7B11CC29C1CEA7 /* PDFInteractiveContentTests.swift in Sources */,
+				BDC93F2219F96AAA3F3310B2 /* AppStoreSubmissionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -754,12 +766,12 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.tests;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -779,7 +791,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = LocalFileDiet/Support/LocalFileDiet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -791,7 +803,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet;
 				PRODUCT_MODULE_NAME = LocalFileDiet;
 				PRODUCT_NAME = "Local File Diet";
@@ -810,12 +822,12 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.tests;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -836,7 +848,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = LocalFileDiet/Support/LocalFileDiet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -848,7 +860,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet;
 				PRODUCT_MODULE_NAME = LocalFileDiet;
 				PRODUCT_NAME = "Local File Diet";
@@ -865,12 +877,12 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.uitests;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -889,13 +901,13 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = LocalFileDietShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LocalFileDietShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.shareextension;
 				PRODUCT_MODULE_NAME = LocalFileDietShareExtension;
 				PRODUCT_NAME = "Local File Diet Share";
@@ -969,12 +981,12 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.uitests;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -992,13 +1004,13 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = LocalFileDietShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8528AN28A3;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LocalFileDietShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simohue.localfilediet.shareextension;
 				PRODUCT_MODULE_NAME = LocalFileDietShareExtension;
 				PRODUCT_NAME = "Local File Diet Share";

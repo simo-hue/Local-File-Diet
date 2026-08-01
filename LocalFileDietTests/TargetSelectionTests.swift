@@ -36,6 +36,34 @@ final class TargetSelectionTests: XCTestCase {
         XCTAssertEqual(selection.pickerOption, .preset(.forms))
     }
 
+    /// Each test writes to its own suite and the teardown block removes it. The
+    /// block can only carry the suite name across, so the cleanup has to work
+    /// through a reopened suite rather than the instance the test used.
+    func testRemovingASuiteByNameReallyClearsIt() throws {
+        let name = "target-selection-tests-cleanup-\(UUID().uuidString)"
+        addTeardownBlock { Self.removeSuite(named: name) }
+        let written = try XCTUnwrap(UserDefaults(suiteName: name))
+        written.set(TargetSizePreset.veryStrict2.rawValue, forKey: AppDefaults.defaultTargetPresetKey)
+        XCTAssertEqual(TargetSelectionState.fromDefaults(written).pickerOption, .preset(.veryStrict2))
+
+        Self.removeSuite(named: name)
+
+        XCTAssertNil(written.string(forKey: AppDefaults.defaultTargetPresetKey))
+        let reopened = try XCTUnwrap(UserDefaults(suiteName: name))
+        XCTAssertNil(reopened.string(forKey: AppDefaults.defaultTargetPresetKey))
+        XCTAssertEqual(TargetSelectionState.fromDefaults(reopened).pickerOption, .preset(.forms))
+    }
+
+    /// Two tests running back to back must not see each other's saved default.
+    func testEachTestGetsItsOwnSuite() throws {
+        let first = try makeDefaults()
+        first.set(TargetSizePreset.veryStrict2.rawValue, forKey: AppDefaults.defaultTargetPresetKey)
+
+        let second = try makeDefaults()
+        XCTAssertNil(second.string(forKey: AppDefaults.defaultTargetPresetKey))
+        XCTAssertEqual(TargetSelectionState.fromDefaults(second).pickerOption, .preset(.forms))
+    }
+
     func testByteTargetsRebuildTheMatchingPresetOrACustomValue() {
         XCTAssertEqual(TargetSelectionState(targetBytes: 5_000_000).pickerOption, .preset(.strict5))
         XCTAssertEqual(TargetSelectionState(targetBytes: 3_300_000).pickerOption, .custom)
@@ -232,10 +260,18 @@ final class TargetSelectionTests: XCTestCase {
     private func makeDefaults() throws -> UserDefaults {
         let name = "target-selection-tests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: name))
+        // `addTeardownBlock` takes a `@Sendable` closure and `UserDefaults` is not
+        // `Sendable`, so the instance itself cannot be captured. Only the suite
+        // name goes in — a `String` — and the block reopens the suite to remove
+        // exactly the same persistent domain.
         addTeardownBlock {
-            defaults.removePersistentDomain(forName: name)
+            Self.removeSuite(named: name)
         }
         return defaults
+    }
+
+    private static func removeSuite(named name: String) {
+        UserDefaults(suiteName: name)?.removePersistentDomain(forName: name)
     }
 
     private func makeResult(
