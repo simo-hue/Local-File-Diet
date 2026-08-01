@@ -1,6 +1,6 @@
 # Manual actions for Simo
 
-Version is now **1.1.0 (build 2)**. Everything below needs you, because none of it can be done on the machine these changes were written on (Command Line Tools only, no Xcode).
+Version is now **2.0 (build 2)**. Everything below needs you, because none of it can be done on the machine these changes were written on (Command Line Tools only, no Xcode).
 
 ## 1. Build and test on the Mac mini — required
 
@@ -12,9 +12,7 @@ All 38 app source files type-check against the real UIKit/SwiftUI/PDFKit via Mac
 
 ## 2. Check the build number before you upload
 
-`CURRENT_PROJECT_VERSION` is set to **2**. App Store Connect rejects any build whose number is not higher than the last one you uploaded *for this version train*. If you already uploaded more than one build of 1.0, raise it — it is one `sed` over `project.pbxproj` plus the same two lines in `Scripts/generate_project.rb`.
-
-If you would rather ship this as **2.0** than 1.1.0, say so — four engines were rewritten and batch compression is new, so either is defensible.
+`CURRENT_PROJECT_VERSION` is set to **2**. Because 2.0 is a new version train, App Store Connect would also accept build 1 — 2 was kept simply because it is monotonic against everything you have uploaded before, which can never collide. Raise it if you need to; it is one `sed` over `project.pbxproj` plus the same line in `Scripts/generate_project.rb`.
 
 ## 3. Smoke-test these by hand — they could not be verified here
 
