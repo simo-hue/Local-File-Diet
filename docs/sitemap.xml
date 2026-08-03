@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://simo-hue.github.io/Local-File-Diet/</loc>
-  </url>
-  <url>
-    <loc>https://simo-hue.github.io/Local-File-Diet/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/"/>
   </url>
   <url>
     <loc>https://simo-hue.github.io/Local-File-Diet/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/support.html"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/it/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/it/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/support.html"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/es/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/es/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/support.html"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/de/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/de/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/support.html"/>
+  </url>
+  <url>
+    <loc>https://simo-hue.github.io/Local-File-Diet/privacy.html</loc>
   </url>
   <url>
     <loc>https://simo-hue.github.io/Local-File-Diet/terms.html</loc>

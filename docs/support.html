@@ -1,106 +1,241 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Support - Local File Diet</title>
-  <meta name="description" content="Support, troubleshooting, and App Store review links for Local File Diet.">
-  <link rel="canonical" href="https://simo-hue.github.io/Local-File-Diet/support.html">
-  <meta property="og:title" content="Support - Local File Diet">
-  <meta property="og:description" content="Get help with Local File Diet and its private on-device compression workflow.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://simo-hue.github.io/Local-File-Diet/support.html">
-  <meta property="og:image" content="https://simo-hue.github.io/Local-File-Diet/assets/logo.png">
-  <meta name="theme-color" content="#1d2c26">
-  <link rel="icon" href="assets/logo.png" type="image/png">
-  <link rel="stylesheet" href="assets/site.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Support — Local File Diet</title>
+<meta name="description" content="Help, troubleshooting and contact for Local File Diet.">
+<link rel="canonical" href="https://simo-hue.github.io/Local-File-Diet/support.html">
+<link rel="alternate" hreflang="en" href="https://simo-hue.github.io/Local-File-Diet/support.html">
+<link rel="alternate" hreflang="it" href="https://simo-hue.github.io/Local-File-Diet/it/support.html">
+<link rel="alternate" hreflang="es" href="https://simo-hue.github.io/Local-File-Diet/es/support.html">
+<link rel="alternate" hreflang="de" href="https://simo-hue.github.io/Local-File-Diet/de/support.html">
+<link rel="alternate" hreflang="x-default" href="https://simo-hue.github.io/Local-File-Diet/support.html">
+<meta name="apple-itunes-app" content="app-id=6773253471">
+<meta name="theme-color" content="#04090a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Local File Diet">
+<meta property="og:title" content="Local File Diet — Compress files to an exact size">
+<meta property="og:description" content="Videos, PDFs, images and archives, compressed to the number you need. Entirely on your iPhone.">
+<meta property="og:url" content="https://simo-hue.github.io/Local-File-Diet/support.html">
+<meta property="og:image" content="https://simo-hue.github.io/Local-File-Diet/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Local File Diet — Compress files to an exact size">
+<meta name="twitter:description" content="Videos, PDFs, images and archives, compressed to the number you need. Entirely on your iPhone.">
+<meta name="twitter:image" content="https://simo-hue.github.io/Local-File-Diet/assets/og.png">
+<link rel="icon" href="assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ibm-plex-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css?v=3">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why did my file barely get smaller?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Some files are already compressed as far as they usefully go — an H.264 video exported at a low bitrate, or a PDF that is mostly text, has little left to remove. When a target is not reachable without visible damage, the app says so rather than producing a file that looks broken."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Compression runs on your iPhone. There is no server involved, and the app works with no network connection at all. Files leave the device only when you choose to share, save or export the result yourself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the app change my original file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Local File Diet copies your selection into a temporary workspace and writes a new compressed file. The original is left exactly as it was."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can a compressed PDF lose selectable text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aggressive PDF compression can rebuild pages as flat images, which is sometimes the only way to hit a small target on a scanned document. The app warns you before taking that route, because it also removes links, form fields and annotations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I remove local data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Clear temporary files from the app settings, clear recent history from the home screen, and delete any exported files wherever you saved them. Deleting the app removes everything it stored on the device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a subscription?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Local File Diet is a one-time purchase with no subscription, no account and no in-app purchases. Every feature is unlocked from the start."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Local File Diet home">
-      <img src="assets/logo.png" alt="" width="36" height="36">
-      <span>Local File Diet</span>
-    </a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="index.html">Home</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="support.html">Support</a>
-      <a href="terms.html">Terms</a>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-in">
+    <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path class="jaw" d="M8 4H4.5v16H8M16 4h3.5v16H16" stroke-width="1.7" stroke-linecap="square"/><path class="target" d="M12 7.5v9" stroke-width="1.7" stroke-linecap="square"/></svg><span>Local File Diet</span></a>
+
+    <nav class="nav" aria-label="Overview">
+        <a href="index.html">Overview</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="support.html">Support</a>
+        <a href="terms.html">Terms</a>
     </nav>
-  </header>
 
-  <main>
-    <section class="support-hero">
-      <p class="eyebrow">Support</p>
-      <h1>Help with Local File Diet</h1>
-      <p>Use the support link below for product questions, bug reports, privacy questions, and App Store review contact.</p>
-      <a class="button primary" href="https://github.com/simo-hue/Local-File-Diet/issues">Open a support request</a>
-      <p class="small-note">GitHub Issues are public. Do not upload private files, personal documents, or screenshots containing sensitive information.</p>
-    </section>
-
-    <section class="section" aria-labelledby="quick-help-title">
-      <div class="section-heading compact">
-        <p class="eyebrow">Quick help</p>
-        <h2 id="quick-help-title">Common questions</h2>
-      </div>
-      <div class="faq-list">
-        <details>
-          <summary>Why did my file not get much smaller?</summary>
-          <p>Some files are already compressed or contain content that cannot be reduced without visible quality loss. Local File Diet will avoid making unrealistic claims and may warn you when a target is too small.</p>
-        </details>
-        <details>
-          <summary>Are my files uploaded?</summary>
-          <p>No. Compression is designed to run on the device. Files leave your iPhone only when you choose to share, export, save, or send the output through another app.</p>
-        </details>
-        <details>
-          <summary>Will the app change my original file?</summary>
-          <p>No. Local File Diet works from a temporary local copy and creates a new compressed output. Your original file is preserved.</p>
-        </details>
-        <details>
-          <summary>Why can a compressed PDF lose selectable text?</summary>
-          <p>Aggressive PDF compression can rebuild pages as images, especially for scanned documents. The app warns when that approach may remove selectable text, links, forms, or annotations.</p>
-        </details>
-        <details>
-          <summary>How do I remove local data?</summary>
-          <p>Use the app settings to clear temporary files, clear recent history from the home screen, and delete exported files wherever you saved them. Uninstalling the app removes app-local data from the device.</p>
-        </details>
-      </div>
-    </section>
-
-    <section class="section app-store-section" aria-labelledby="review-links-title">
-      <div class="section-heading compact">
-        <p class="eyebrow">For App Store Connect</p>
-        <h2 id="review-links-title">Review URLs</h2>
-      </div>
-      <div class="review-links">
-        <div>
-          <span>Support URL</span>
-          <code>https://simo-hue.github.io/Local-File-Diet/support.html</code>
-        </div>
-        <div>
-          <span>Privacy Policy URL</span>
-          <code>https://simo-hue.github.io/Local-File-Diet/privacy.html</code>
-        </div>
-        <div>
-          <span>Terms URL</span>
-          <code>https://simo-hue.github.io/Local-File-Diet/terms.html</code>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div>
-      <strong>Local File Diet</strong>
-      <span>Private file compression for iPhone.</span>
+    <div class="masthead-end">
+      <nav class="langs" aria-label="Language">
+        <a href="support.html" hreflang="en" aria-current="true">EN</a>
+        <a href="it/support.html" hreflang="it">IT</a>
+        <a href="es/support.html" hreflang="es">ES</a>
+        <a href="de/support.html" hreflang="de">DE</a>
+      </nav>
+      <a class="head-cta" href="https://apps.apple.com/app/id6773253471">App&nbsp;Store</a>
     </div>
-    <nav aria-label="Footer">
-      <a href="privacy.html">Privacy</a>
-      <a href="support.html">Support</a>
-      <a href="terms.html">Terms</a>
-    </nav>
-    <p>&copy; <span data-current-year>2026</span> Local File Diet. All rights reserved.</p>
-  </footer>
-  <script src="assets/site.js" defer></script>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-head" data-scroll-trigger>
+    <div class="shell">
+      <p class="label">Support</p>
+      <h1>Help with Local File Diet</h1>
+      <p class="lead">Questions about how compression behaves, bug reports, or anything about privacy — here is how to reach a human.</p>
+      <p class="page-meta"><span>Version 2.0</span><span>iOS 17 or later</span><span>iPhone</span></p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell band-in">
+      <div class="rail"><p class="label">Contact</p></div>
+      <div class="rv">
+        <div class="contact contact-lead">
+        <a class="contact-card" href="mailto:simone.mattioli@iite.eu">
+          <p class="label">Email</p>
+          <strong>Write to me directly</strong>
+          <span>Best for anything involving your own files, an account question, or a privacy request. Nothing you send becomes public.</span>
+          <em>simone.mattioli@iite.eu</em>
+        </a>
+        <a class="contact-card" href="https://github.com/simo-hue/Local-File-Diet/issues">
+          <p class="label">Bug reports</p>
+          <strong>Open a GitHub issue</strong>
+          <span>Best for reproducible bugs and feature requests. Issues are public — never attach private documents or screenshots containing personal data.</span>
+          <em>github.com/simo-hue/Local-File-Diet</em>
+        </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell band-in">
+      <div class="rail"><p class="label">Common questions</p></div>
+      <div class="rv">
+        <div class="band-head"><h2>Before you write in.</h2></div>
+        <div class="faq">
+          <details>
+            <summary>Why did my file barely get smaller?</summary>
+            <div class="faq-a"><p>Some files are already compressed as far as they usefully go — an H.264 video exported at a low bitrate, or a PDF that is mostly text, has little left to remove.</p><p>When a target is not reachable without visible damage, the app says so rather than producing a file that looks broken.</p></div>
+          </details>
+          <details>
+            <summary>Are my files uploaded anywhere?</summary>
+            <div class="faq-a"><p>No. Compression runs on your iPhone. There is no server involved, and the app works with no network connection at all.</p><p>Files leave the device only when you choose to share, save or export the result yourself.</p></div>
+          </details>
+          <details>
+            <summary>Will the app change my original file?</summary>
+            <div class="faq-a"><p>No. Local File Diet copies your selection into a temporary workspace and writes a new compressed file. The original is left exactly as it was.</p></div>
+          </details>
+          <details>
+            <summary>Why can a compressed PDF lose selectable text?</summary>
+            <div class="faq-a"><p>Aggressive PDF compression can rebuild pages as flat images, which is sometimes the only way to hit a small target on a scanned document.</p><p>The app warns you before taking that route, because it also removes links, form fields and annotations.</p></div>
+          </details>
+          <details>
+            <summary>How do I remove local data?</summary>
+            <div class="faq-a"><p>Clear temporary files from the app settings, clear recent history from the home screen, and delete any exported files wherever you saved them.</p><p>Deleting the app removes everything it stored on the device.</p></div>
+          </details>
+          <details>
+            <summary>Is there a subscription?</summary>
+            <div class="faq-a"><p>No. Local File Diet is a one-time purchase with no subscription, no account and no in-app purchases. Every feature is unlocked from the start.</p></div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closer">
+    <div class="shell closer-in">
+      <h2>Get under the limit.</h2>
+      <p class="lead">Local File Diet is on the App Store for iPhone, running iOS 17 or later.</p>
+      <a class="badge" href="https://apps.apple.com/app/id6773253471"><img src="assets/badges/appstore-en-us.svg" alt="Download Local File Diet on the App Store" width="158" height="52"></a>
+        <ul class="hero-note">
+          <li>Pay once</li>
+          <li>No subscription</li>
+          <li>No account</li>
+          <li>No ads</li>
+        </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path class="jaw" d="M8 4H4.5v16H8M16 4h3.5v16H16" stroke-width="1.7" stroke-linecap="square"/><path class="target" d="M12 7.5v9" stroke-width="1.7" stroke-linecap="square"/></svg><span>Local File Diet</span></a>
+        <p>Compress videos, PDFs, images and archives to an exact size — privately, on your iPhone.</p>
+      </div>
+
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#precision">How targeting works</a></li>
+          <li><a href="index.html#privacy">Privacy design</a></li>
+          <li><a href="https://apps.apple.com/app/id6773253471">App Store</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Help &amp; legal</h4>
+        <ul>
+          <li><a href="support.html">Support</a></li>
+          <li><a href="privacy.html">Privacy policy</a></li>
+          <li><a href="terms.html">Terms of use</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-base">
+      <span>© <span data-year>2026</span> Simone Mattioli</span>
+      <span>Made for iPhone · No trackers on this site</span>
+    </div>
+  </div>
+</footer>
+
+<div class="dock">
+  <p class="dock-txt"><b>Local File Diet</b>Compress to an exact size</p>
+  <a class="badge" href="https://apps.apple.com/app/id6773253471"><img src="assets/badges/appstore-en-us.svg" alt="Download Local File Diet on the App Store" width="115" height="38"></a>
+</div>
+
+<script src="assets/site.js?v=3" defer></script>
 </body>
 </html>
